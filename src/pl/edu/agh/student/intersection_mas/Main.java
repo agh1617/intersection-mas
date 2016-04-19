@@ -14,10 +14,9 @@ import java.util.Set;
  */
 public class Main {
     public static void main(String[] args) {
-        Set<Node> inputNodes = IntersectionLoader.loadIntersection();
-        Intersection intersection = new Intersection(inputNodes);
+        Intersection intersection = IntersectionLoader.loadIntersection();
 
         ActorSystem system = ActorSystem.create("IntersectionSimulation");
-        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, 2, 5), "intersectionSupervisor");
+        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, 2, 1), "intersectionSupervisor");
     }
 }

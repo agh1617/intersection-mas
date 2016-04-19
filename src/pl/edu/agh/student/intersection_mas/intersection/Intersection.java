@@ -1,5 +1,7 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
+import pl.edu.agh.student.intersection_mas.agent.Driver;
+
 import java.util.Set;
 
 /**
@@ -8,16 +10,31 @@ import java.util.Set;
 public class Intersection {
     private Set<Node> inputNodes;
 
-    public Intersection(Set<Node> inputNodes) {
+    private Set<Node> outputNodes;
+
+    private IntersectionState intersectionState;
+
+    public Intersection(Set<Node> inputNodes, Set<Node> outputNodes) {
         this.inputNodes = inputNodes;
+        this.outputNodes = outputNodes;
+
+        this.intersectionState = new IntersectionState();
     }
 
     public Set<Node> getInputNodes() {
         return inputNodes;
     }
 
+    public Set<Node> getOutputNodes() {
+        return outputNodes;
+    }
+
     public void setInputNodes(Set<Node> inputNodes) {
         this.inputNodes = inputNodes;
+    }
+
+    public IntersectionState getIntersectionState() {
+        return intersectionState;
     }
 
     @Override

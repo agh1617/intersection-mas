@@ -18,6 +18,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private Intersection intersection;
 
     public IntersectionSupervisor(Intersection intersection, int simulationSteps, int driversNumber) {
+        this.intersection = intersection;
         this.simulationSteps = simulationSteps;
         this.driversNumber = driversNumber;
     }
@@ -26,7 +27,7 @@ public class IntersectionSupervisor extends UntypedActor {
     public void preStart() {
         ActorRef driver;
         for (int i = 0; i < driversNumber; i++) {
-            driver = getContext().actorOf(Props.create(Driver.class, intersection), "driver_" + i);
+            driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + i);
             drivers.add(driver);
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
         }

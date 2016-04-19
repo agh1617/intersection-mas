@@ -56,6 +56,15 @@ public class Node {
         return this.outgoingEdges.iterator().next().getEnd();
     }
 
+    public Edge getEdgeTo(Node endNode) {
+        for (Edge edge : this.getOutgoingEdges()) {
+            if (edge.getEnd() == endNode) {
+                return edge;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         return "pl.edu.agh.student.intersection_mas.intersection.Node{" +

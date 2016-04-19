@@ -6,12 +6,15 @@ package pl.edu.agh.student.intersection_mas.intersection;
 public class Edge {
     private int id;
 
+    private int length;
+
     private Node start;
 
     private Node end;
 
-    public Edge(int id, Node start, Node end) {
+    public Edge(int id, int length, Node start, Node end) {
         this.id = id;
+        this.length = length;
         this.start = start;
         this.end = end;
     }
@@ -20,24 +23,16 @@ public class Edge {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public int getLength() {
+        return length;
     }
 
     public Node getStart() {
         return start;
     }
 
-    public void setStart(Node start) {
-        this.start = start;
-    }
-
     public Node getEnd() {
         return end;
-    }
-
-    public void setEnd(Node end) {
-        this.end = end;
     }
 
     @Override
