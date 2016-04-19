@@ -31,7 +31,7 @@ public class Route {
         Node currentNode = this.start;
         this.nodes.add(currentNode);
 
-        while (currentNode != null && !currentNode.equals(this.end)) {
+        while (currentNode != null && currentNode != this.end) {
             Iterator<Edge> outgoingEdgeIt = currentNode.getOutgoingEdges().iterator();
 
             if (outgoingEdgeIt.hasNext()) {

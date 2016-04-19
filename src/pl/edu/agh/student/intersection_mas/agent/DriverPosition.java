@@ -27,4 +27,12 @@ public class DriverPosition {
         this.edge = edge;
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "DriverPosition{" +
+                "edge=" + edge +
+                ", position=" + position +
+                '}';
+    }
 }

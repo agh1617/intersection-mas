@@ -35,6 +35,7 @@ public class Driver extends UntypedActor {
 
         this.route = new Route(startNode, endNode);
         this.routeIt = this.route.getNodes().iterator();
+        this.routeIt.next();
 
         Edge startEdge = startNode.getEdgeTo(this.routeIt.next());
         DriverPosition startPosition = new DriverPosition(startEdge, 0);
@@ -45,9 +46,14 @@ public class Driver extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         if (message == DriverMessage.COMPUTE_STATE) {
-            System.out.println("pl.edu.agh.student.intersection_mas.agent.Driver: message received");
+            System.out.println("Driver: message received");
 
             this.move();
+
+            System.out.println(
+                    this.intersectionState.getDriverPosition(this).toString()
+            );
+
             Thread.sleep(1000);
 
             getSender().tell(DriverMessage.DONE, getSelf());
