@@ -18,7 +18,7 @@ public class IntersectionLoader {
         Node node3 = new Node(3);
 
         Edge edge1 = new Edge(1, node1, node2);
-        Edge edge2 = new Edge(2, node2, node2);
+        Edge edge2 = new Edge(2, node2, node3);
 
         node1.addOutgoingEdge(edge1);
         node2.addIncomingEdge(edge1);

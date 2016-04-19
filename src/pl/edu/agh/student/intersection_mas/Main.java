@@ -14,13 +14,10 @@ import java.util.Set;
  */
 public class Main {
     public static void main(String[] args) {
-        ActorSystem system = ActorSystem.create("IntersectionSimulation");
-        system.actorOf(Props.create(IntersectionSupervisor.class, 2, 5), "intersectionSupervisor");
-
-
         Set<Node> inputNodes = IntersectionLoader.loadIntersection();
         Intersection intersection = new Intersection(inputNodes);
 
-        System.out.println(intersection.toString());
+        ActorSystem system = ActorSystem.create("IntersectionSimulation");
+        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, 2, 5), "intersectionSupervisor");
     }
 }

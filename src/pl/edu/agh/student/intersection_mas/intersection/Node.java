@@ -52,6 +52,10 @@ public class Node {
         this.outgoingEdges = outgoingEdges;
     }
 
+    public Node randomNextNode() {
+        return this.outgoingEdges.iterator().next().getEnd();
+    }
+
     @Override
     public String toString() {
         return "pl.edu.agh.student.intersection_mas.intersection.Node{" +

@@ -3,6 +3,7 @@ package pl.edu.agh.student.intersection_mas.agent;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 
 import java.util.ArrayList;
 
@@ -14,8 +15,9 @@ public class IntersectionSupervisor extends UntypedActor {
     private ArrayList<ActorRef> drivers = new ArrayList<ActorRef>();
     private int receivedStates = 0;
     private int simulationSteps;
+    private Intersection intersection;
 
-    public IntersectionSupervisor(int simulationSteps, int driversNumber) {
+    public IntersectionSupervisor(Intersection intersection, int simulationSteps, int driversNumber) {
         this.simulationSteps = simulationSteps;
         this.driversNumber = driversNumber;
     }
@@ -24,7 +26,7 @@ public class IntersectionSupervisor extends UntypedActor {
     public void preStart() {
         ActorRef driver;
         for (int i = 0; i < driversNumber; i++) {
-            driver = getContext().actorOf(Props.create(Driver.class), "driver_" + i);
+            driver = getContext().actorOf(Props.create(Driver.class, intersection), "driver_" + i);
             drivers.add(driver);
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
         }
