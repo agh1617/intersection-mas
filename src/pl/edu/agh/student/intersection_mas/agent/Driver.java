@@ -3,9 +3,8 @@ package pl.edu.agh.student.intersection_mas.agent;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.intersection.*;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by maciek on 19.04.16.
@@ -15,29 +14,22 @@ public class Driver extends UntypedActor {
 
     private IntersectionState intersectionState;
 
-    private Route route;
-
     private int speed;
-
-    private Iterator<Node> routeIt;
 
     public Driver(Intersection intersection) {
         this.intersection = intersection;
         this.intersectionState = this.intersection.getIntersectionState();
 
-        this.speed = 10;
+        this.speed = 60;
     }
 
     @Override
     public void preStart() throws Exception {
-        Node startNode = intersection.getInputNodes().iterator().next();
-        Node endNode = intersection.getOutputNodes().iterator().next();
+        Set<Node> startNodes = intersection.getInputNodes();
+        Node startNode = (Node) startNodes.toArray()[new Random().nextInt(startNodes.size())];
 
-        this.route = new Route(startNode, endNode);
-        this.routeIt = this.route.getNodes().iterator();
-        this.routeIt.next();
-
-        Edge startEdge = startNode.getEdgeTo(this.routeIt.next());
+        Set<Edge> outgoingEdges = startNode.getOutgoingEdges();
+        Edge startEdge = (Edge) outgoingEdges.toArray()[new Random().nextInt(outgoingEdges.size())];
         DriverPosition startPosition = new DriverPosition(startEdge, 0);
 
         this.intersectionState.addDriverPosition(this, startPosition);
@@ -48,23 +40,27 @@ public class Driver extends UntypedActor {
         if (message == DriverMessage.COMPUTE_STATE) {
             System.out.println("Driver: message received");
 
-            this.move();
+            if (this.moveForward()) {
 
-            System.out.println(
-                    this.intersectionState.getDriverPosition(this).toString()
-            );
+                System.out.println(
+                        this.intersectionState.getDriverPosition(this).toString()
+                );
 
-            Thread.sleep(1000);
+                Thread.sleep(1000);
 
-            getSender().tell(DriverMessage.DONE, getSelf());
+                getSender().tell(DriverMessage.DONE, getSelf());
+            }
+            else {
+                getSender().tell(DriverMessage.FINISHED, getSelf());
+            }
         } else
             unhandled(message);
     }
 
-    private void move() {
+    private boolean moveForward() {
         DriverPosition driverPosition = this.intersectionState.getDriverPosition(this);
 
-        Node currentNode, nextNode;
+        Node currentNode;
         Edge currentEdge, nextEdge;
 
         currentEdge = driverPosition.getEdge();
@@ -73,10 +69,21 @@ public class Driver extends UntypedActor {
         int nextPosition;
 
         if (driverPosition.getPosition() + speed > currentEdge.getLength()) {
-            nextNode = this.routeIt.next();
-            nextEdge = currentNode.getEdgeTo(nextNode);
+            TrafficLight light = currentNode.getTrafficLight(currentEdge);
+            if (light != null && light.getState() == TrafficLightState.RED) {
+                nextEdge = currentEdge;
+                nextPosition = currentEdge.getLength();
+            }
+            else {
+                Set<Edge> outgoingEdges = currentNode.getOutgoingEdges();
+                if (outgoingEdges.size() > 0) {
+                    nextEdge = (Edge) outgoingEdges.toArray()[new Random().nextInt(outgoingEdges.size())];
 
-            nextPosition = driverPosition.getPosition() + speed - currentEdge.getLength();;
+                    nextPosition = driverPosition.getPosition() + speed - currentEdge.getLength();
+                } else {
+                    return false;
+                }
+            }
         } else {
             nextEdge = currentEdge;
             nextPosition = driverPosition.getPosition() + speed;
@@ -84,5 +91,7 @@ public class Driver extends UntypedActor {
 
         driverPosition.set(nextEdge, nextPosition);
         this.intersectionState.setDriverPosition(this, driverPosition);
+
+        return true;
     }
 }

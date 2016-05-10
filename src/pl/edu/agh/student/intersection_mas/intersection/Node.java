@@ -1,6 +1,8 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -13,11 +15,14 @@ public class Node {
 
     private Set<Edge> outgoingEdges;
 
+    private Map<Edge, TrafficLight> trafficLights;
+
     public Node(int id) {
         this.id = id;
 
         this.incomingEdges = new HashSet<Edge>();
         this.outgoingEdges = new HashSet<Edge>();
+        this.trafficLights = new HashMap<Edge, TrafficLight>();
     }
 
     public int getId() {
@@ -63,6 +68,14 @@ public class Node {
             }
         }
         return null;
+    }
+
+    public void addTrafficLight(TrafficLight trafficLight) {
+        trafficLights.put(trafficLight.getIncomingEdge(), trafficLight);
+    }
+
+    public TrafficLight getTrafficLight(Edge edge) {
+        return trafficLights.get(edge);
     }
 
     @Override

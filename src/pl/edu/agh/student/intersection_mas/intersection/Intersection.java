@@ -1,8 +1,8 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
-import pl.edu.agh.student.intersection_mas.agent.Driver;
 
 import java.util.Random;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -15,11 +15,14 @@ public class Intersection {
 
     private IntersectionState intersectionState;
 
+    private ArrayList<TrafficLight> trafficLights;
+
     public Intersection(Set<Node> inputNodes, Set<Node> outputNodes) {
         this.inputNodes = inputNodes;
         this.outputNodes = outputNodes;
 
         this.intersectionState = new IntersectionState();
+        this.trafficLights = new ArrayList<TrafficLight>();
     }
 
     public Set<Node> getInputNodes() {
@@ -40,6 +43,15 @@ public class Intersection {
 
     public IntersectionState getIntersectionState() {
         return intersectionState;
+    }
+
+    public ArrayList<TrafficLight> getTrafficLights() {
+        return trafficLights;
+    }
+
+    public void addTraficLight(TrafficLight light) {
+
+        this.trafficLights.add(light);
     }
 
     @Override

@@ -5,5 +5,6 @@ package pl.edu.agh.student.intersection_mas.agent;
  */
 public enum DriverMessage {
     COMPUTE_STATE,
-    DONE
+    DONE,
+    FINISHED
 }
