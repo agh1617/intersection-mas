@@ -2,6 +2,7 @@ package pl.edu.agh.student.intersection_mas.intersection;
 
 import pl.edu.agh.student.intersection_mas.agent.Driver;
 
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -27,6 +28,10 @@ public class Intersection {
 
     public Set<Node> getOutputNodes() {
         return outputNodes;
+    }
+
+    public Node getRandomInputNode() {
+        return (Node) inputNodes.toArray()[new Random().nextInt(inputNodes.size())];
     }
 
     public void setInputNodes(Set<Node> inputNodes) {
