@@ -35,8 +35,9 @@ public class Driver extends UntypedActor {
         this.speed = 0;
         this.state = DriverState.IDLE;
 
-        this.maxSpeed = 10 + new Random().nextInt(10);
-        this.acceleration = 1 + new Random().nextInt(2);
+        this.maxSpeed = 15 + new Random().nextInt(10);
+//        this.acceleration = 1 + new Random().nextInt(2);
+        this.acceleration = 7 + new Random().nextInt(2);
         this.deceleration = 2 + new Random().nextInt(3);
 
         this.length = 3 + new Random().nextInt(5);
@@ -92,39 +93,49 @@ public class Driver extends UntypedActor {
     }
 
     private void calculateState() {
-        int brakingDistance = this.calculateBrakingDistance();
+        int distance = this.speed + this.calculateBrakingDistance();
 
         Edge currentEdge = this.position.getEdge();
+        Node currentNode = currentEdge.getEnd();
+
         int currentPosition = this.position.getPosition();
 
         Set<Driver> driversAhead;
+        TrafficLight trafficLightAhead;
 
         do {
-            driversAhead = currentEdge.getDriversInSegment(currentPosition, brakingDistance);
+            driversAhead = currentEdge.getDriversInSegment(currentPosition, distance);
 
-            if (!driversAhead.isEmpty()) {
-                this.state = DriverState.DECELERATION;
-            } else {
+            if (driversAhead.isEmpty()) {
                 this.state = DriverState.ACCELERATION;
+            } else {
+                this.state = DriverState.DECELERATION;
+                break;
             }
 
-            brakingDistance -= currentEdge.getLength() - currentPosition;
+            distance -= currentEdge.getLength() - currentPosition;
 
-            if (brakingDistance >= 0) {
+            if (distance >= 0) {
+                trafficLightAhead = currentNode.getTrafficLight(currentEdge);
+
+                if (trafficLightAhead != null && !trafficLightAhead.allowsTraffic()) {
+                    this.state = DriverState.DECELERATION;
+                    break;
+                }
+
                 currentEdge = this.calculateNextEdge(currentEdge);
 
                 if (currentEdge == null) return;
             }
 
             currentPosition = 0;
-        } while (brakingDistance > 0);
+        } while (distance > 0);
     }
 
     private boolean moveForward() {
         int distance = this.speed;
 
         Edge currentEdge = this.position.getEdge();
-        Edge nextEdge;
 
         int currentPosition = this.position.getPosition();
 
@@ -136,7 +147,7 @@ public class Driver extends UntypedActor {
                 currentEdge = this.calculateNextEdge(currentEdge);
 
                 if (currentEdge == null) return false;
-                
+
                 currentEdge.addDriver(this);
                 this.position.set(currentEdge, 0);
             } else {

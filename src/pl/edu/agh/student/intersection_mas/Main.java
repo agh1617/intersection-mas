@@ -16,6 +16,6 @@ public class Main {
 
         Intersection intersection = IntersectionLoader.loadIntersection();
 
-        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, 2, 2), "intersectionSupervisor");
+        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, 2, 1), "intersectionSupervisor");
     }
 }

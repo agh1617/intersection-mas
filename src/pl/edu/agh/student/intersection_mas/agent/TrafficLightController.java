@@ -27,7 +27,16 @@ public class TrafficLightController extends UntypedActor {
                 counter = 0;
                 trafficLight.changeState();
             }
+
+            System.out.println(this.toString());
         } else
             unhandled(message);
+    }
+
+    @Override
+    public String toString() {
+        return "TrafficLightController{" +
+                "light=" + trafficLight.getState() +
+                '}';
     }
 }

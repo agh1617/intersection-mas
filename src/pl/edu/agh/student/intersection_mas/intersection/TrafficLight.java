@@ -26,4 +26,8 @@ public class TrafficLight {
         else
             state = TrafficLightState.GREEN;
     }
+
+    public boolean allowsTraffic() {
+        return this.state == TrafficLightState.GREEN;
+    }
 }
