@@ -132,19 +132,17 @@ public class Driver extends UntypedActor {
             if (distance >= currentEdge.getLength() - currentPosition) {
                 distance -= currentEdge.getLength() - currentPosition;
 
-                nextEdge = this.calculateNextEdge(currentEdge);
-
-                if (nextEdge == null) return false;
-
                 currentEdge.removeDriver(this);
-                nextEdge.addDriver(this);
+                currentEdge = this.calculateNextEdge(currentEdge);
 
-                this.position.set(nextEdge, 0);
+                if (currentEdge == null) return false;
+                
+                currentEdge.addDriver(this);
+                this.position.set(currentEdge, 0);
             } else {
                 this.position.set(currentEdge, currentPosition + distance);
                 distance = 0;
             }
-
             currentPosition = 0;
         }
         return true;
