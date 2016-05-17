@@ -48,11 +48,17 @@ public class IntersectionSupervisor extends UntypedActor {
 
     private void handleMovement() {
         receivedStates++;
-        System.out.println("message received");
+
         if (receivedStates == driversNumber) {
             currentSimulationStep++;
-            System.out.println("All message received");
             receivedStates = 0;
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             askDriversForState();
             notifyTrafficLightControllers();
         }

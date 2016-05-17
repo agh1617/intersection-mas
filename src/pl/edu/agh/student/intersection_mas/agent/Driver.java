@@ -36,17 +36,13 @@ public class Driver extends UntypedActor {
     }
 
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void onReceive(Object message) {
         if (message == DriverMessage.COMPUTE_STATE) {
-            System.out.println("Driver: message received");
-
             if (this.moveForward()) {
 
                 System.out.println(
                         this.intersectionState.getDriverPosition(this).toString()
                 );
-
-                Thread.sleep(1000);
 
                 getSender().tell(DriverMessage.DONE, getSelf());
             }
