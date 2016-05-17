@@ -8,6 +8,7 @@ import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
  */
 public class TrafficLightController extends UntypedActor {
     private TrafficLight trafficLight;
+    private int counter = 0;
 
     public TrafficLightController(TrafficLight trafficLight) {
         this.trafficLight = trafficLight;
@@ -20,6 +21,13 @@ public class TrafficLightController extends UntypedActor {
 
     @Override
     public void onReceive(Object message) throws Exception {
-
+        if (message == TrafficLightMessage.COMPUTE_STATE) {
+            counter++;
+            if (counter == 25) {
+                counter = 0;
+                trafficLight.changeState();
+            }
+        } else
+            unhandled(message);
     }
 }

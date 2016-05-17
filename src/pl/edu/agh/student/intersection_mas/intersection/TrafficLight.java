@@ -19,4 +19,11 @@ public class TrafficLight {
     public TrafficLightState getState() {
         return state;
     }
+
+    public void changeState() {
+        if (state == TrafficLightState.GREEN)
+            state = TrafficLightState.RED;
+        else
+            state = TrafficLightState.GREEN;
+    }
 }

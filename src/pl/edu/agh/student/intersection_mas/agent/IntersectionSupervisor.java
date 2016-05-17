@@ -17,12 +17,14 @@ public class IntersectionSupervisor extends UntypedActor {
     private ArrayList<ActorRef> trafficLightControllers = new ArrayList<ActorRef>();
     private int receivedStates = 0;
     private int simulationSteps;
+    private int currentSimulationStep;
     private Intersection intersection;
 
     public IntersectionSupervisor(Intersection intersection, int simulationSteps, int driversNumber) {
         this.intersection = intersection;
         this.simulationSteps = simulationSteps;
         this.driversNumber = driversNumber;
+        this.currentSimulationStep = 0;
     }
 
     @Override
@@ -48,15 +50,23 @@ public class IntersectionSupervisor extends UntypedActor {
         receivedStates++;
         System.out.println("message received");
         if (receivedStates == driversNumber) {
+            currentSimulationStep++;
             System.out.println("All message received");
             receivedStates = 0;
             askDriversForState();
+            notifyTrafficLightControllers();
         }
     }
 
     private void askDriversForState() {
         for (ActorRef driver : drivers) {
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
+        }
+    }
+
+    private void notifyTrafficLightControllers() {
+        for (ActorRef lightController : trafficLightControllers) {
+            lightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
         }
     }
 
