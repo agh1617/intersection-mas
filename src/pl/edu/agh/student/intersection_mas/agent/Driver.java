@@ -107,7 +107,8 @@ public class Driver extends UntypedActor {
             driversAhead = currentEdge.getDriversInSegment(currentPosition, distance);
 
             if (driversAhead.isEmpty()) {
-                this.state = DriverState.ACCELERATION;
+                if (this.state == DriverState.DECELERATION) this.state = DriverState.IDLE;
+                else this.state = DriverState.ACCELERATION;
             } else {
                 this.state = DriverState.DECELERATION;
                 break;
@@ -174,7 +175,8 @@ public class Driver extends UntypedActor {
     }
 
     private int calculateBrakingDistance() {
-        return (int) Math.ceil((double) (this.speed * this.speed) / (2 * this.deceleration));
+        int featureSpeed = this.speed + this.acceleration;
+        return (int) Math.ceil((double) (featureSpeed * featureSpeed) / (2 * this.deceleration));
     }
 
     public DriverPosition getPosition() {
