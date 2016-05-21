@@ -3,6 +3,7 @@ package pl.edu.agh.student.intersection_mas.intersection;
 import pl.edu.agh.student.intersection_mas.agent.Driver;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -28,11 +29,11 @@ public class Edge {
         this.drivers = new HashSet<Driver>();
     }
 
-    public void addDriver(Driver driver) {
+    public synchronized void addDriver(Driver driver) {
         this.drivers.add(driver);
     }
 
-    public void removeDriver(Driver driver) {
+    public synchronized void removeDriver(Driver driver) {
         this.drivers.remove(driver);
     }
 
@@ -40,13 +41,19 @@ public class Edge {
         return drivers;
     }
 
-    public Set<Driver> getDriversInSegment(int start, int length) {
+    public synchronized Set<Driver> getDriversInSegment(int start, int length) {
+        // TODO: Improve concurrency
+
         Set<Driver> driversInSegment = new HashSet<Driver>();
         int driverPosition;
 
         int end = Math.min(start + length, this.length);
 
-        for (Driver driver : this.drivers) {
+        Iterator<Driver> driversIterator = drivers.iterator();
+        Driver driver;
+
+        while (driversIterator.hasNext()) {
+            driver = driversIterator.next();
             driverPosition = driver.getPosition().getPosition();
 
             if (driverPosition > start && driverPosition <= end) {
