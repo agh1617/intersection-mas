@@ -34,8 +34,8 @@ public class Driver extends UntypedActor {
 
         this.maxSpeed = 15 + new Random().nextInt(10);
 
-        this.acceleration = 7 + new Random().nextInt(2);
-        this.deceleration = 2 + new Random().nextInt(3);
+        this.acceleration = 2 + new Random().nextInt(2);
+        this.deceleration = 1 + new Random().nextInt(3);
 
         this.length = 3 + new Random().nextInt(5);
     }

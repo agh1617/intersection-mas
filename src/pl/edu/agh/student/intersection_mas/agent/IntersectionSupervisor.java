@@ -43,8 +43,8 @@ public class IntersectionSupervisor extends UntypedActor {
         }
         else if (message == DriverMessage.FINISHED) {
             drivers.remove(getSender());
-            handleMovement();
             driversNumber--;
+            handleMovement();
         } else
             unhandled(message);
     }
@@ -57,7 +57,7 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
