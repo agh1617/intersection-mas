@@ -36,6 +36,10 @@ public class Edge {
         this.drivers.remove(driver);
     }
 
+    public Set<Driver> getDrivers() {
+        return drivers;
+    }
+
     public Set<Driver> getDriversInSegment(int start, int length) {
         Set<Driver> driversInSegment = new HashSet<Driver>();
         int driverPosition;

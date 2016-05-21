@@ -3,6 +3,7 @@ package pl.edu.agh.student.intersection_mas.agent;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
 
@@ -19,9 +20,11 @@ public class IntersectionSupervisor extends UntypedActor {
     private int simulationSteps;
     private int currentSimulationStep;
     private Intersection intersection;
+    private IntersectionView intersectionView;
 
-    public IntersectionSupervisor(Intersection intersection, int simulationSteps, int driversNumber) {
+    public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView, int simulationSteps, int driversNumber) {
         this.intersection = intersection;
+        this.intersectionView = intersectionView;
         this.simulationSteps = simulationSteps;
         this.driversNumber = driversNumber;
         this.currentSimulationStep = 0;
@@ -59,6 +62,7 @@ public class IntersectionSupervisor extends UntypedActor {
                 e.printStackTrace();
             }
 
+            intersectionView.updateView();
             askDriversForState();
             notifyTrafficLightControllers();
         }

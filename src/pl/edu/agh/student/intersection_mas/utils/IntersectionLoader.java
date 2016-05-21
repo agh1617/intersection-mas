@@ -12,17 +12,18 @@ import java.util.HashSet;
  */
 public class IntersectionLoader {
     public static Intersection loadIntersection() {
+        HashSet<Node> nodes = new HashSet<Node>();
         HashSet<Node> inputNodes = new HashSet<Node>();
         HashSet<Node> outputNodes = new HashSet<Node>();
 
-        Node node1 = new Node(1);
-        Node node2 = new Node(2);
-        Node node3 = new Node(3);
-        Node node4 = new Node(4);
-        Node node5 = new Node(5);
-        Node node6 = new Node(6);
-        Node node7 = new Node(7);
-        Node node8 = new Node(8);
+        Node node1 = new Node(1, 0, 0);
+        Node node2 = new Node(2, 100, 0);
+        Node node3 = new Node(3, 200, 0);
+        Node node4 = new Node(4, 300, 0);
+        Node node5 = new Node(5, 0, 100);
+        Node node6 = new Node(6, 100, 100);
+        Node node7 = new Node(7, 200, 100);
+        Node node8 = new Node(8, 300, 100);
 
         Edge edge1 = new Edge(1, 100, node1, node2);
         Edge edge2 = new Edge(2, 100, node2, node3);
@@ -57,12 +58,22 @@ public class IntersectionLoader {
         node7.addIncomingEdge(edge5);
         node7.addIncomingEdge(edge8);
 
+        nodes.add(node1);
+        nodes.add(node2);
+        nodes.add(node3);
+        nodes.add(node4);
+        nodes.add(node5);
+        nodes.add(node6);
+        nodes.add(node7);
+        nodes.add(node8);
         inputNodes.add(node1);
         inputNodes.add(node8);
         outputNodes.add(node4);
         outputNodes.add(node5);
 
-        Intersection intersection = new Intersection(inputNodes, outputNodes);
+        Intersection intersection = new Intersection(nodes);
+        intersection.setInputNodes(inputNodes);
+        intersection.setOutputNodes(outputNodes);
 
         intersection.addTraficLight(light1);
         intersection.addTraficLight(light2);

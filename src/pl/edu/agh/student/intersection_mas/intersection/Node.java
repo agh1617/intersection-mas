@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public class Node {
     private int id;
+    private int x;
+    private int y;
 
     private Set<Edge> incomingEdges;
 
@@ -17,8 +19,10 @@ public class Node {
 
     private Map<Edge, TrafficLight> trafficLights;
 
-    public Node(int id) {
+    public Node(int id, int x, int y) {
         this.id = id;
+        this.x = x;
+        this.y = y;
 
         this.incomingEdges = new HashSet<Edge>();
         this.outgoingEdges = new HashSet<Edge>();
@@ -31,6 +35,14 @@ public class Node {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void addIncomingEdge(Edge edge) {
