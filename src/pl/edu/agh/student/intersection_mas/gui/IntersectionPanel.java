@@ -1,12 +1,12 @@
 package pl.edu.agh.student.intersection_mas.gui;
 
 import pl.edu.agh.student.intersection_mas.agent.Driver;
-import pl.edu.agh.student.intersection_mas.intersection.Edge;
-import pl.edu.agh.student.intersection_mas.intersection.Intersection;
-import pl.edu.agh.student.intersection_mas.intersection.Node;
+import pl.edu.agh.student.intersection_mas.intersection.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by maciek on 21.05.16.
@@ -23,6 +23,11 @@ public class IntersectionPanel extends JPanel {
     private static final Color EDGE_COLOR = Color.GRAY;
     private static final Color DRIVER_COLOR = Color.BLUE;
 
+    private static final Map<TrafficLightState, Color> trafficLightColors = new HashMap<TrafficLightState, Color>() {{
+        put(TrafficLightState.GREEN, Color.GREEN);
+        put(TrafficLightState.RED, Color.RED);
+    }};
+
     public IntersectionPanel(Intersection intersection) {
         this.intersection = intersection;
         this.intersectionDimension = intersection.getDimension();
@@ -36,9 +41,10 @@ public class IntersectionPanel extends JPanel {
     }
 
     private void drawIntersection(Graphics2D g) {
-        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, driverX, driverY;
+        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, driverX, driverY, edgeEndX, edgeEndY;
         float normalizedDriverPosition;
         Node endNode;
+        TrafficLight trafficLight;
 
         g.scale(1, -1);
         g.translate(0, -this.getHeight());
@@ -50,7 +56,7 @@ public class IntersectionPanel extends JPanel {
             scaledNodeY = scaledY(nodeY);
 
             g.setColor(NODE_COLOR);
-            g.fillOval(scaledNodeX - NODE_RADIUS, scaledNodeY - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
+            g.fillRect(scaledNodeX - NODE_RADIUS, scaledNodeY - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
 
             for (Edge edge : node.getOutgoingEdges()) {
                 endNode = edge.getEnd();
@@ -59,6 +65,17 @@ public class IntersectionPanel extends JPanel {
 
                 g.setColor(EDGE_COLOR);
                 g.drawLine(scaledNodeX, scaledNodeY, scaledX(endNodeX), scaledY(endNodeY));
+
+                edgeEndX = (int) (endNodeX - (float) (endNodeX - nodeX) / edge.getLength()  * NODE_RADIUS);
+                edgeEndY = (int) (endNodeY - (float) (endNodeY - nodeY) / edge.getLength()  * NODE_RADIUS);
+
+                trafficLight = endNode.getTrafficLight(edge);
+
+                if (trafficLight != null) {
+                    g.setColor(trafficLightColors.get(trafficLight.getState()));
+                }
+
+                g.fillOval(scaledX(edgeEndX) - NODE_RADIUS, scaledY(edgeEndY) - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
 
                 g.setColor(DRIVER_COLOR);
                 for (Driver driver : edge.getDrivers()) {
