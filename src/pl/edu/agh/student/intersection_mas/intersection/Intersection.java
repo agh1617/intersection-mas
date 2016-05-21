@@ -13,15 +13,12 @@ public class Intersection {
 
     private Set<Node> outputNodes;
 
-    private IntersectionState intersectionState;
-
     private ArrayList<TrafficLight> trafficLights;
 
     public Intersection(Set<Node> inputNodes, Set<Node> outputNodes) {
         this.inputNodes = inputNodes;
         this.outputNodes = outputNodes;
 
-        this.intersectionState = new IntersectionState();
         this.trafficLights = new ArrayList<TrafficLight>();
     }
 
@@ -39,10 +36,6 @@ public class Intersection {
 
     public void setInputNodes(Set<Node> inputNodes) {
         this.inputNodes = inputNodes;
-    }
-
-    public IntersectionState getIntersectionState() {
-        return intersectionState;
     }
 
     public ArrayList<TrafficLight> getTrafficLights() {

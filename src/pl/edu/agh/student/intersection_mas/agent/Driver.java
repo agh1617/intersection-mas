@@ -12,8 +12,6 @@ import java.util.Set;
 public class Driver extends UntypedActor {
     private Intersection intersection;
 
-    private IntersectionState intersectionState;
-
     private DriverState state;
 
     private DriverPosition position;
@@ -30,13 +28,12 @@ public class Driver extends UntypedActor {
 
     public Driver(Intersection intersection) {
         this.intersection = intersection;
-        this.intersectionState = this.intersection.getIntersectionState();
 
         this.speed = 0;
         this.state = DriverState.IDLE;
 
         this.maxSpeed = 15 + new Random().nextInt(10);
-//        this.acceleration = 1 + new Random().nextInt(2);
+
         this.acceleration = 7 + new Random().nextInt(2);
         this.deceleration = 2 + new Random().nextInt(3);
 
@@ -93,7 +90,7 @@ public class Driver extends UntypedActor {
     }
 
     private void calculateState() {
-        int distance = this.speed + this.calculateBrakingDistance();
+        int distance = this.speed + this.acceleration + this.calculateBrakingDistance();
 
         Edge currentEdge = this.position.getEdge();
         Node currentNode = currentEdge.getEnd();
