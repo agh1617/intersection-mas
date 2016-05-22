@@ -37,6 +37,14 @@ public class IntersectionLoader {
         TrafficLight light1 = new TrafficLight(edge1);
         TrafficLight light2 = new TrafficLight(edge8);
 
+        HashSet<TrafficLight> dependentTrafficLights1 = new HashSet<TrafficLight>();
+        dependentTrafficLights1.add(light2);
+        light1.setDependentTrafficLights(dependentTrafficLights1);
+
+        HashSet<TrafficLight> dependentTrafficLights2 = new HashSet<TrafficLight>();
+        dependentTrafficLights2.add(light1);
+        light2.setDependentTrafficLights(dependentTrafficLights2);
+
         node2.addTrafficLight(light1);
         node7.addTrafficLight(light2);
 

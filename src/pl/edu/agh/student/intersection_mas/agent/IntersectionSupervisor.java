@@ -5,7 +5,6 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
-import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
 
 import java.util.ArrayList;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 public class IntersectionSupervisor extends UntypedActor {
     private int driversNumber;
     private ArrayList<ActorRef> drivers = new ArrayList<ActorRef>();
-    private ArrayList<ActorRef> trafficLightControllers = new ArrayList<ActorRef>();
+    private ActorRef trafficLightController;
     private int receivedStates = 0;
     private int simulationSteps;
     private int currentSimulationStep;
@@ -32,7 +31,7 @@ public class IntersectionSupervisor extends UntypedActor {
 
     @Override
     public void preStart() {
-        spawnTrafficLights(intersection.getTrafficLights());
+        trafficLightController = getContext().actorOf(Props.create(TrafficLightController.class, intersection.getTrafficLights()), "traffic_light_controller");
         spawnDrivers();
     }
 
@@ -57,14 +56,14 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(200);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
             intersectionView.updateView();
             askDriversForState();
-            notifyTrafficLightControllers();
+            trafficLightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
         }
     }
 
@@ -74,26 +73,12 @@ public class IntersectionSupervisor extends UntypedActor {
         }
     }
 
-    private void notifyTrafficLightControllers() {
-        for (ActorRef lightController : trafficLightControllers) {
-            lightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
-        }
-    }
-
     private void spawnDrivers() {
         ActorRef driver;
         for (int i = 0; i < driversNumber; i++) {
             driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + i);
             drivers.add(driver);
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
-        }
-    }
-
-    private void spawnTrafficLights(ArrayList<TrafficLight> trafficLights) {
-        ActorRef lightController;
-        for (int i = 0; i < trafficLights.size(); i++) {
-            lightController = getContext().actorOf(Props.create(TrafficLightController.class, trafficLights.get(i)), "traffic_light_" + i);
-            trafficLightControllers.add(lightController);
         }
     }
 }
