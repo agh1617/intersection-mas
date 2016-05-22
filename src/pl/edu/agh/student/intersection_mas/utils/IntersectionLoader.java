@@ -18,21 +18,21 @@ public class IntersectionLoader {
 
         Node node1 = new Node(1, 0, 0);
         Node node2 = new Node(2, 100, 0);
-        Node node3 = new Node(3, 200, 0);
-        Node node4 = new Node(4, 300, 0);
-        Node node5 = new Node(5, 0, 100);
-        Node node6 = new Node(6, 100, 100);
-        Node node7 = new Node(7, 200, 100);
-        Node node8 = new Node(8, 300, 100);
+        Node node3 = new Node(3, 150, 0);
+        Node node4 = new Node(4, 250, 0);
+        Node node5 = new Node(5, 0, 50);
+        Node node6 = new Node(6, 100, 50);
+        Node node7 = new Node(7, 150, 50);
+        Node node8 = new Node(8, 250, 50);
 
-        Edge edge1 = new Edge(1, 100, node1, node2);
+        Edge edge1 = new Edge(1, 1000, node1, node2);
         Edge edge2 = new Edge(2, 100, node2, node3);
-        Edge edge3 = new Edge(3, 100, node3, node4);
+        Edge edge3 = new Edge(3, 1000, node3, node4);
         Edge edge4 = new Edge(4, 100, node6, node2);
         Edge edge5 = new Edge(5, 100, node3, node7);
-        Edge edge6 = new Edge(6, 100, node6, node5);
+        Edge edge6 = new Edge(6, 1000, node6, node5);
         Edge edge7 = new Edge(7, 100, node7, node6);
-        Edge edge8 = new Edge(8, 100, node8, node7);
+        Edge edge8 = new Edge(8, 1000, node8, node7);
 
         TrafficLight light1 = new TrafficLight(edge1);
         TrafficLight light2 = new TrafficLight(edge8);

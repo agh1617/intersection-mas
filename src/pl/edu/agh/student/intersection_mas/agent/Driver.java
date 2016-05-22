@@ -32,10 +32,10 @@ public class Driver extends UntypedActor {
         this.speed = 0;
         this.state = DriverState.IDLE;
 
-        this.maxSpeed = 15 + new Random().nextInt(10);
+        this.maxSpeed = 20 + new Random().nextInt(10);
 
-        this.acceleration = 2 + new Random().nextInt(2);
-        this.deceleration = 1 + new Random().nextInt(3);
+        this.acceleration = 5 + new Random().nextInt(2);
+        this.deceleration = 5 + new Random().nextInt(3);
 
         this.length = 3 + new Random().nextInt(5);
     }
