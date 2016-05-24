@@ -12,19 +12,19 @@ import java.util.Set;
 public class Edge {
     private int id;
 
-    private int length;
-
     private Node start;
 
     private Node end;
 
+    private float length;
+
     private Set<Driver> drivers;
 
-    public Edge(int id, int length, Node start, Node end) {
+    public Edge(int id, Node start, Node end) {
         this.id = id;
-        this.length = length;
         this.start = start;
         this.end = end;
+        this.length = start.distanceTo(end);
 
         this.drivers = new HashSet<Driver>();
 
@@ -50,7 +50,7 @@ public class Edge {
         Set<Driver> driversInSegment = new HashSet<Driver>();
         int driverPosition;
 
-        int end = Math.min(start + length, this.length);
+        int end = (int) Math.min(start + length, this.length);
 
         Iterator<Driver> driversIterator = drivers.iterator();
         Driver driver;
@@ -67,12 +67,12 @@ public class Edge {
         return driversInSegment;
     }
 
-    public float getLength() {
-        return start.distanceTo(end);
-    }
-
     public Node getEnd() {
         return end;
+    }
+
+    public float getLength() {
+        return length;
     }
 
     public int getId() {

@@ -59,7 +59,7 @@ public class IntersectionPanel extends JPanel {
         g.translate(0, -this.getHeight());
 
         Stroke edgeStroke = new BasicStroke(1);
-        Stroke driverStroke = new BasicStroke(5);
+        Stroke driverStroke = new BasicStroke(8);
 
         for (Node node : this.intersection.getNodes()) {
             nodeX = node.getX();
@@ -112,7 +112,9 @@ public class IntersectionPanel extends JPanel {
                     driverEndY = (int) (driverY + edgeDirY * (float) driverLength / 2);
 
                     g.setStroke(driverStroke);
+                    g.setColor(driver.getColor());
                     g.drawLine(scaledX(driverStartX), scaledY(driverStartY), scaledX(driverEndX), scaledY(driverEndY));
+//                    g.fillOval(scaledX(driverX) - DRIVER_RADIUS, scaledY(driverY) - DRIVER_RADIUS, 2 * DRIVER_RADIUS, 2 * DRIVER_RADIUS);
                 }
             }
 

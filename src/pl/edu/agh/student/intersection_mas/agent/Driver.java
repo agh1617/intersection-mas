@@ -3,6 +3,7 @@ package pl.edu.agh.student.intersection_mas.agent;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.intersection.*;
 
+import java.awt.*;
 import java.util.Random;
 import java.util.Set;
 
@@ -10,6 +11,8 @@ import java.util.Set;
  * Created by maciek on 19.04.16.
  */
 public class Driver extends UntypedActor {
+    private static final int MAX_LENGTH = 10;
+
     private Intersection intersection;
 
     private DriverState state;
@@ -26,6 +29,8 @@ public class Driver extends UntypedActor {
 
     private int length;
 
+    private Color color;
+
     public Driver(Intersection intersection) {
         this.intersection = intersection;
 
@@ -37,7 +42,9 @@ public class Driver extends UntypedActor {
         this.acceleration = 5 + new Random().nextInt(2);
         this.deceleration = 5 + new Random().nextInt(3);
 
-        this.length = 3 + new Random().nextInt(5);
+        this.length = 3 + new Random().nextInt(2);
+
+        this.color = calculateRandomColor();
     }
 
     @Override
@@ -94,12 +101,13 @@ public class Driver extends UntypedActor {
         Node currentNode = currentEdge.getEnd();
 
         int currentPosition = this.position.getPosition();
+        int currentHeadPosition = (int) (currentPosition + (float) length / 2);
 
         Set<Driver> driversAhead;
         TrafficLight trafficLightAhead;
 
         do {
-            driversAhead = currentEdge.getDriversInSegment(currentPosition, distance);
+            driversAhead = currentEdge.getDriversInSegment(currentHeadPosition, distance);
 
             if (driversAhead.isEmpty()) {
                 if (this.state == DriverState.DECELERATION) this.state = DriverState.IDLE;
@@ -182,6 +190,10 @@ public class Driver extends UntypedActor {
         return length;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     @Override
     public String toString() {
         return "Driver{" +
@@ -193,5 +205,15 @@ public class Driver extends UntypedActor {
                 ", acceleration=" + acceleration +
                 ", deceleration=" + deceleration +
                 '}';
+    }
+
+    private Color calculateRandomColor() {
+        Random rand = new Random();
+
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+
+        return new Color(r, g, b);
     }
 }
