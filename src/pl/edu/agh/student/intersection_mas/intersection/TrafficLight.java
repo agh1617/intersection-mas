@@ -76,7 +76,7 @@ public class TrafficLight {
     public int calculateCarsOverTimeFactor() {
         this.stepsSinceStageChange++;
 
-        return stepsSinceStageChange * calculateApproachingDriversCount();
+        return stepsSinceStageChange + 10 * calculateApproachingDriversCount();
     }
 
     private int calculateApproachingDriversCount() {
