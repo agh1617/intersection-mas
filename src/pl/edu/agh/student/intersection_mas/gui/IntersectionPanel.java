@@ -46,11 +46,11 @@ public class IntersectionPanel extends JPanel {
     }
 
     private void drawIntersection(Graphics2D g) {
-        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, driverX, driverY, edgeEndX, edgeEndY;
-        float edgeLength;
+        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, scaledEndNodeX, scaledEndNodeY, driverX, driverY, lightX, lightY;
         int driverStartX, driverStartY, driverEndX, driverEndY;
         float edgeDirX, edgeDirY;
         float normalizedDriverPosition;
+        double edgeLength, lightEdgeRatio;
         int driverLength;
         Node endNode;
         TrafficLight trafficLight;
@@ -76,25 +76,27 @@ public class IntersectionPanel extends JPanel {
                 endNode = edge.getEnd();
                 endNodeX = endNode.getX();
                 endNodeY = endNode.getY();
+                scaledEndNodeX = scaledX(endNodeX);
+                scaledEndNodeY = scaledY(endNodeY);
 
                 edgeLength = edge.getLength();
-
-                edgeDirX = (float) (endNodeX - nodeX) / edgeLength;
-                edgeDirY = (float) (endNodeY - nodeY) / edgeLength;
+                edgeDirX = (float) ((float) (endNodeX - nodeX) / edgeLength);
+                edgeDirY = (float) ((float) (endNodeY - nodeY) / edgeLength);
 
                 g.setColor(EDGE_COLOR);
-                g.drawLine(scaledNodeX, scaledNodeY, scaledX(endNodeX), scaledY(endNodeY));
+                g.drawLine(scaledNodeX, scaledNodeY, scaledEndNodeX, scaledEndNodeY);
 
-                edgeEndX = (int) (endNodeX - (float) (endNodeX - nodeX) / edge.getLength()  * NODE_RADIUS);
-                edgeEndY = (int) (endNodeY - (float) (endNodeY - nodeY) / edge.getLength()  * NODE_RADIUS);
+                // compute traffic light position
+                edgeLength = Math.sqrt(Math.pow(scaledEndNodeX - scaledNodeX, 2) + Math.pow(scaledEndNodeY - scaledNodeY, 2));
+                lightEdgeRatio = (edgeLength - 3 * NODE_RADIUS) / edgeLength;
 
+                lightX = (int) (nodeX + lightEdgeRatio * (endNodeX - nodeX));
+                lightY = (int) (nodeY + lightEdgeRatio * (endNodeY - nodeY));
+
+                // draw traffic light
                 trafficLight = endNode.getTrafficLight(edge);
-
-                if (trafficLight != null) {
-                    g.setColor(trafficLightColors.get(trafficLight.getState()));
-                }
-
-                g.fillOval(scaledX(edgeEndX) - NODE_RADIUS, scaledY(edgeEndY) - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
+                if (trafficLight != null) g.setColor(trafficLightColors.get(trafficLight.getState()));
+                g.fillOval(scaledX(lightX) - NODE_RADIUS, scaledY(lightY) - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
 
                 g.setColor(DRIVER_COLOR);
                 for (Driver driver : edge.getDrivers()) {
