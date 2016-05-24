@@ -6,10 +6,10 @@ import java.util.Set;
  * Created by maciek on 10.05.16.
  */
 public class TrafficLight {
-    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 100;
-    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 30;
-    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 50;
-    private static final int GREEN_DELAY_STEPS = 10;
+    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 20;
+    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 5;
+    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 10;
+    private static final int GREEN_DELAY_STEPS = 5;
 
     private int id;
     private Edge incomingEdge;

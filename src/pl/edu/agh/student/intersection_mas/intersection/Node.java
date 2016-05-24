@@ -14,9 +14,8 @@ public class Node {
     private int y;
 
     private Set<Edge> incomingEdges;
-
     private Set<Edge> outgoingEdges;
-
+    private Map<Edge, Set<Edge>> forbiddenEdgesMap;
     private Map<Edge, TrafficLight> trafficLights;
 
     public Node(int id, int x, int y) {
@@ -26,6 +25,7 @@ public class Node {
 
         this.incomingEdges = new HashSet<Edge>();
         this.outgoingEdges = new HashSet<Edge>();
+        this.forbiddenEdgesMap = new HashMap<Edge, Set<Edge>>();
         this.trafficLights = new HashMap<Edge, TrafficLight>();
     }
 
@@ -51,6 +51,17 @@ public class Node {
 
     public void addOutgoingEdge(Edge edge) {
         this.outgoingEdges.add(edge);
+    }
+
+    public void addForbiddenEdges(Edge edge, HashSet<Edge> forbiddenEdges) {
+        this.forbiddenEdgesMap.put(edge, forbiddenEdges);
+    }
+
+    public Set<Edge> getAllowedOutgoingEdges(Edge edge) {
+        Set<Edge> allowedOutgoingEdges = new HashSet<Edge>(this.outgoingEdges);
+        Set<Edge> forbiddenEdges = forbiddenEdgesMap.get(edge);
+        if (forbiddenEdges != null) allowedOutgoingEdges.removeAll(forbiddenEdges);
+        return allowedOutgoingEdges;
     }
 
     public Set<Edge> getIncomingEdges() {
