@@ -50,7 +50,7 @@ public class TrafficLightController extends UntypedActor {
         for (lightIndex = 0; lightIndex < trafficLights.size(); lightIndex++) {
             TrafficLight light = trafficLights.get(lightIndex);
 
-            if (remainingTrafficLights[lightIndex] && !light.allowChange() && light.allowsTraffic()) {
+            if (remainingTrafficLights[lightIndex] && !light.allowsChange() && light.getState() != TrafficLightState.RED) {
                 calculateTrafficLightState(lightIndex);
             }
         }

@@ -37,10 +37,10 @@ public class IntersectionLoader {
         Edge edge9 = new Edge(9, 200, node7, node8);
         Edge edge10 = new Edge(10, 100, node8, node9);
 
-        TrafficLight light1 = new TrafficLight(edge1);
-        TrafficLight light2 = new TrafficLight(edge2);
-        TrafficLight light3 = new TrafficLight(edge7);
-        TrafficLight light4 = new TrafficLight(edge9);
+        TrafficLight light1 = new TrafficLight(1, edge1);
+        TrafficLight light2 = new TrafficLight(2, edge2);
+        TrafficLight light3 = new TrafficLight(3, edge7);
+        TrafficLight light4 = new TrafficLight(4, edge9);
 
         HashSet<TrafficLight> dependentTrafficLights1 = new HashSet<TrafficLight>();
         dependentTrafficLights1.add(light3);

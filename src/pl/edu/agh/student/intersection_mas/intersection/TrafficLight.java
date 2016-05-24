@@ -6,17 +6,22 @@ import java.util.Set;
  * Created by maciek on 10.05.16.
  */
 public class TrafficLight {
-    private static final int MIN_STEPS_TO_CHANGE_STATE = 20;
-    private static final int CARS_OVER_TIME_THRESHOLD = 5;
+    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 10;
+    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 3;
+    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 5;
 
+    private int id;
     private Edge incomingEdge;
     private TrafficLightState state;
+    private TrafficLightState nextState;
     private int stepsSinceStageChange;
     private Set<TrafficLight> dependentTrafficLights;
 
-    public TrafficLight(Edge incomingEdge) {
+    public TrafficLight(int id, Edge incomingEdge) {
+        this.id = id;
         this.incomingEdge = incomingEdge;
         this.state = TrafficLightState.RED;
+        this.stepsSinceStageChange = 0;
     }
 
     public Edge getIncomingEdge() {
@@ -35,15 +40,26 @@ public class TrafficLight {
         return state;
     }
 
+
     public void changeState(TrafficLightState state) {
-        if (this.state != state) {
-            this.state = state;
-            this.stepsSinceStageChange = 0;
+        System.out.println(this.toString() + state);
+        if (state != this.state) {
+            if (this.state == TrafficLightState.YELLOW && this.stepsSinceStageChange >= MIN_STEPS_TO_CHANGE_YELLOW_STATE) {
+                this.state = this.nextState;
+                this.stepsSinceStageChange = 0;
+            }
+            else if (allowsChange()) {
+                this.state = TrafficLightState.YELLOW;
+                this.nextState = state;
+                this.stepsSinceStageChange = 0;
+            }
         }
     }
 
-    public boolean allowChange() {
-        return stepsSinceStageChange > MIN_STEPS_TO_CHANGE_STATE;
+    public boolean allowsChange() {
+        if (this.state == TrafficLightState.GREEN) return stepsSinceStageChange > MIN_STEPS_TO_CHANGE_GREEN_STATE;
+        else if (this.state == TrafficLightState.RED) return stepsSinceStageChange > MIN_STEPS_TO_CHANGE_RED_STATE;
+        return false;
     }
 
     public boolean allowsTraffic() {
@@ -58,5 +74,15 @@ public class TrafficLight {
 
     private int calculateApproachingDriversCount() {
         return  incomingEdge.getDrivers().size();
+    }
+
+    @Override
+    public String toString() {
+        return "TrafficLight{" +
+                id +
+                ", state=" + state +
+                ", nextState=" + nextState +
+                ", stepsSinceStageChange=" + stepsSinceStageChange +
+                '}';
     }
 }

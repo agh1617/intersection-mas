@@ -63,9 +63,7 @@ public class Driver extends UntypedActor {
                 this.calculateState();
                 this.updateSpeed();
 
-                System.out.println(
-                        this.toString()
-                );
+//                System.out.println(this.toString());
 
                 getSender().tell(DriverMessage.DONE, getSelf());
             }

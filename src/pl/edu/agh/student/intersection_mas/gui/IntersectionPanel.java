@@ -25,6 +25,7 @@ public class IntersectionPanel extends JPanel {
 
     private static final Map<TrafficLightState, Color> trafficLightColors = new HashMap<TrafficLightState, Color>() {{
         put(TrafficLightState.GREEN, Color.GREEN);
+        put(TrafficLightState.YELLOW, Color.YELLOW);
         put(TrafficLightState.RED, Color.RED);
     }};
 
