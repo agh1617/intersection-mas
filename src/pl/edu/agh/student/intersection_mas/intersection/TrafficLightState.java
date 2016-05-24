@@ -5,5 +5,6 @@ package pl.edu.agh.student.intersection_mas.intersection;
  */
 public enum TrafficLightState {
     GREEN,
+    YELLOW,
     RED
 }

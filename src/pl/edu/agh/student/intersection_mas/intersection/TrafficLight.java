@@ -14,8 +14,8 @@ public class TrafficLight {
     private int stepsSinceStageChange;
     private Set<TrafficLight> dependentTrafficLights;
 
-    public TrafficLight(Edge incommingEdge) {
-        this.incomingEdge = incommingEdge;
+    public TrafficLight(Edge incomingEdge) {
+        this.incomingEdge = incomingEdge;
         this.state = TrafficLightState.RED;
     }
 

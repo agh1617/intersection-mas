@@ -51,7 +51,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private void handleMovement() {
         receivedStates++;
 
-        if (receivedStates == driversNumber) {
+        if (receivedStates >= driversNumber) {
             currentSimulationStep++;
             receivedStates = 0;
 
