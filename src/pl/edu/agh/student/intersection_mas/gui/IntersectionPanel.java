@@ -42,9 +42,8 @@ public class IntersectionPanel extends JPanel {
     }
 
     private void drawIntersection(Graphics2D g) {
-        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, scaledEndNodeX, scaledEndNodeY, driverX, driverY, lightX, lightY;
+        int nodeX, nodeY, endNodeX, endNodeY, scaledNodeX, scaledNodeY, driverX, driverY, edgeEndX, edgeEndY;
         float normalizedDriverPosition;
-        double edgeLength, lightEdgeRatio;
         Node endNode;
         TrafficLight trafficLight;
 
@@ -64,23 +63,20 @@ public class IntersectionPanel extends JPanel {
                 endNode = edge.getEnd();
                 endNodeX = endNode.getX();
                 endNodeY = endNode.getY();
-                scaledEndNodeX = scaledX(endNodeX);
-                scaledEndNodeY = scaledY(endNodeY);
 
                 g.setColor(EDGE_COLOR);
-                g.drawLine(scaledNodeX, scaledNodeY, scaledEndNodeX, scaledEndNodeY);
+                g.drawLine(scaledNodeX, scaledNodeY, scaledX(endNodeX), scaledY(endNodeY));
+
+                edgeEndX = (int) (endNodeX - (float) (endNodeX - nodeX) / edge.getLength()  * NODE_RADIUS);
+                edgeEndY = (int) (endNodeY - (float) (endNodeY - nodeY) / edge.getLength()  * NODE_RADIUS);
 
                 trafficLight = endNode.getTrafficLight(edge);
 
-                // compute light position
-                edgeLength = Math.sqrt(Math.pow(scaledEndNodeX - scaledNodeX, 2) + Math.pow(scaledEndNodeY - scaledNodeY, 2));
-                lightEdgeRatio = (edgeLength - 2 * NODE_RADIUS) / edgeLength;
-                lightX = (int) (nodeX + lightEdgeRatio * (endNodeX - nodeX));
-                lightY = (int) (nodeY + lightEdgeRatio * (endNodeY - nodeY));
+                if (trafficLight != null) {
+                    g.setColor(trafficLightColors.get(trafficLight.getState()));
+                }
 
-                // draw traffic light
-                if (trafficLight != null) g.setColor(trafficLightColors.get(trafficLight.getState()));
-                g.fillOval(scaledX(lightX) - NODE_RADIUS, scaledY(lightY) - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
+                g.fillOval(scaledX(edgeEndX) - NODE_RADIUS, scaledY(edgeEndY) - NODE_RADIUS, 2 * NODE_RADIUS, 2 * NODE_RADIUS);
 
                 g.setColor(DRIVER_COLOR);
                 for (Driver driver : edge.getDrivers()) {
