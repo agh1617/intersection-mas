@@ -178,6 +178,10 @@ public class Driver extends UntypedActor {
         return position;
     }
 
+    public int getLength() {
+        return length;
+    }
+
     @Override
     public String toString() {
         return "Driver{" +
@@ -188,8 +192,6 @@ public class Driver extends UntypedActor {
                 ", speed=" + speed +
                 ", acceleration=" + acceleration +
                 ", deceleration=" + deceleration +
-//                ", length=" + length +
-//                ", maxSpeed=" + maxSpeed +
                 '}';
     }
 }

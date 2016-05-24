@@ -67,8 +67,8 @@ public class Edge {
         return driversInSegment;
     }
 
-    public int getLength() {
-        return length;
+    public float getLength() {
+        return start.distanceTo(end);
     }
 
     public Node getEnd() {

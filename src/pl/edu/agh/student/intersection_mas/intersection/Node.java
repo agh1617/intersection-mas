@@ -69,6 +69,14 @@ public class Node {
         this.outgoingEdges = outgoingEdges;
     }
 
+    public float distanceTo(Node other) {
+        int diffX, diffY;
+        diffX = other.getX() - x;
+        diffY = other.getY() - y;
+
+        return (float) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+    }
+
     public Node randomNextNode() {
         return this.outgoingEdges.iterator().next().getEnd();
     }
