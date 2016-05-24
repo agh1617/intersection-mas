@@ -16,15 +16,15 @@ public class IntersectionLoader {
         HashSet<Node> inputNodes = new HashSet<Node>();
         HashSet<Node> outputNodes = new HashSet<Node>();
 
-        Node node1 = new Node(1, 75, 225);
-        Node node2 = new Node(2, 50, 125);
-        Node node3 = new Node(3, 75, 125);
-        Node node4 = new Node(4, 0, 75);
-        Node node5 = new Node(5, 75, 75);
-        Node node6 = new Node(6, 125, 75);
-        Node node7 = new Node(7, 225, 75);
-        Node node8 = new Node(8, 125, 50);
-        Node node9 = new Node(9, 75, 0);
+        Node node1 = new Node(1, 750, 2250);
+        Node node2 = new Node(2, 500, 1250);
+        Node node3 = new Node(3, 750, 1250);
+        Node node4 = new Node(4, 0, 750);
+        Node node5 = new Node(5, 750, 750);
+        Node node6 = new Node(6, 1250, 750);
+        Node node7 = new Node(7, 2250, 750);
+        Node node8 = new Node(8, 1250, 500);
+        Node node9 = new Node(9, 750, 0);
 
         Edge edge1 = new Edge(1, node1, node2);
         Edge edge2 = new Edge(2, node1, node3);
