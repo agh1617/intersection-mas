@@ -5,7 +5,6 @@ import pl.edu.agh.student.intersection_mas.intersection.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +49,7 @@ public class IntersectionPanel extends JPanel {
     }
 
     private void drawIntersection(Graphics2D g) {
+        setPanelOrientation(g);
         drawEdges(g);
         drawNodes(g);
         drawTrafficLights(g);
@@ -115,6 +115,7 @@ public class IntersectionPanel extends JPanel {
 
                 trafficLight = endNode.getTrafficLight(edge);
 
+                g.setColor(NODE_COLOR);
                 if (trafficLight != null) {
                     g.setColor((TRAFFIC_LIGHT_COLORS.get(trafficLight.getState())));
                 }
@@ -132,7 +133,7 @@ public class IntersectionPanel extends JPanel {
     private void drawDrivers(Graphics2D g) {
         Node endNode;
 
-        float edgePositionRatio;    
+        float edgePositionRatio;
 
         int startNodeX, startNodeY, endNodeX, endNodeY;
 
@@ -198,5 +199,10 @@ public class IntersectionPanel extends JPanel {
         float yFactor = (1 - 2 * MARGIN) / intersectionDimension.height * getHeight();
 
         this.scalingFactor = Math.min(xFactor, yFactor);
+    }
+
+    private void setPanelOrientation(Graphics2D g) {
+        g.scale(1, -1);
+        g.translate(0, -this.getHeight());
     }
 }
