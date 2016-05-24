@@ -20,7 +20,7 @@ public class IntersectionSimulator {
         Intersection intersection = IntersectionLoader.loadIntersection();
         final IntersectionView intersectionView = new IntersectionView(intersection);
 
-        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, intersectionView, 2, 15), "intersectionSupervisor");
+        system.actorOf(Props.create(IntersectionSupervisor.class, intersection, intersectionView, 2, 10), "intersectionSupervisor");
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {

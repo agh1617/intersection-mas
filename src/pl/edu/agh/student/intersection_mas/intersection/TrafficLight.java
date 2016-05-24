@@ -6,22 +6,25 @@ import java.util.Set;
  * Created by maciek on 10.05.16.
  */
 public class TrafficLight {
-    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 10;
-    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 3;
-    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 5;
+    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 100;
+    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 30;
+    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 50;
+    private static final int GREEN_DELAY_STEPS = 10;
 
     private int id;
     private Edge incomingEdge;
     private TrafficLightState state;
     private TrafficLightState nextState;
     private int stepsSinceStageChange;
+    private int greenDelayCounter;
     private Set<TrafficLight> dependentTrafficLights;
 
     public TrafficLight(int id, Edge incomingEdge) {
         this.id = id;
         this.incomingEdge = incomingEdge;
         this.state = TrafficLightState.RED;
-        this.stepsSinceStageChange = 0;
+        this.stepsSinceStageChange = 100;
+        this.greenDelayCounter = 0;
     }
 
     public Edge getIncomingEdge() {
@@ -49,9 +52,13 @@ public class TrafficLight {
                 this.stepsSinceStageChange = 0;
             }
             else if (allowsChange()) {
-                this.state = TrafficLightState.YELLOW;
-                this.nextState = state;
-                this.stepsSinceStageChange = 0;
+                this.greenDelayCounter++;
+                if (this.state == TrafficLightState.GREEN || this.greenDelayCounter > GREEN_DELAY_STEPS) {
+                    this.state = TrafficLightState.YELLOW;
+                    this.nextState = state;
+                    this.stepsSinceStageChange = 0;
+                    this.greenDelayCounter = 0;
+                }
             }
         }
     }

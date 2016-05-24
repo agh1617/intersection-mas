@@ -7,6 +7,7 @@ import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by maciek on 19.04.16.
@@ -42,7 +43,8 @@ public class IntersectionSupervisor extends UntypedActor {
         }
         else if (message == DriverMessage.FINISHED) {
             drivers.remove(getSender());
-            driversNumber--;
+            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
+            drivers.add(driver);
             handleMovement();
         } else
             unhandled(message);
@@ -56,7 +58,7 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -76,7 +78,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private void spawnDrivers() {
         ActorRef driver;
         for (int i = 0; i < driversNumber; i++) {
-            driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + i);
+            driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
             drivers.add(driver);
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
         }
