@@ -16,55 +16,54 @@ public class IntersectionLoader {
         HashSet<Node> inputNodes = new HashSet<Node>();
         HashSet<Node> outputNodes = new HashSet<Node>();
 
-        Node node1 = new Node(1, 0, 0);
-        Node node2 = new Node(2, 100, 0);
-        Node node3 = new Node(3, 150, 0);
-        Node node4 = new Node(4, 250, 0);
-        Node node5 = new Node(5, 0, 50);
-        Node node6 = new Node(6, 100, 50);
-        Node node7 = new Node(7, 150, 50);
-        Node node8 = new Node(8, 250, 50);
+        Node node1 = new Node(1, 75, 225);
+        Node node2 = new Node(2, 50, 125);
+        Node node3 = new Node(3, 75, 125);
+        Node node4 = new Node(4, 0, 75);
+        Node node5 = new Node(5, 75, 75);
+        Node node6 = new Node(6, 125, 75);
+        Node node7 = new Node(7, 225, 75);
+        Node node8 = new Node(8, 125, 50);
+        Node node9 = new Node(9, 75, 0);
 
         Edge edge1 = new Edge(1, 1000, node1, node2);
-        Edge edge2 = new Edge(2, 100, node2, node3);
-        Edge edge3 = new Edge(3, 1000, node3, node4);
-        Edge edge4 = new Edge(4, 100, node6, node2);
-        Edge edge5 = new Edge(5, 100, node3, node7);
-        Edge edge6 = new Edge(6, 1000, node6, node5);
-        Edge edge7 = new Edge(7, 100, node7, node6);
-        Edge edge8 = new Edge(8, 1000, node8, node7);
+        Edge edge2 = new Edge(2, 1000, node1, node3);
+        Edge edge3 = new Edge(3, 100, node2, node4);
+        Edge edge4 = new Edge(4, 100, node3, node5);
+        Edge edge5 = new Edge(5, 100, node5, node4);
+        Edge edge6 = new Edge(6, 100, node6, node5);
+        Edge edge7 = new Edge(7, 1000, node7, node6);
+        Edge edge8 = new Edge(8, 100, node5, node9);
+        Edge edge9 = new Edge(9, 1000, node7, node8);
+        Edge edge10 = new Edge(10, 100, node8, node9);
 
         TrafficLight light1 = new TrafficLight(edge1);
-        TrafficLight light2 = new TrafficLight(edge8);
+        TrafficLight light2 = new TrafficLight(edge2);
+        TrafficLight light3 = new TrafficLight(edge7);
+        TrafficLight light4 = new TrafficLight(edge9);
 
         HashSet<TrafficLight> dependentTrafficLights1 = new HashSet<TrafficLight>();
-        dependentTrafficLights1.add(light2);
+        dependentTrafficLights1.add(light3);
         light1.setDependentTrafficLights(dependentTrafficLights1);
 
         HashSet<TrafficLight> dependentTrafficLights2 = new HashSet<TrafficLight>();
-        dependentTrafficLights2.add(light1);
+        dependentTrafficLights2.add(light3);
+        dependentTrafficLights2.add(light4);
         light2.setDependentTrafficLights(dependentTrafficLights2);
 
+        HashSet<TrafficLight> dependentTrafficLights3 = new HashSet<TrafficLight>();
+        dependentTrafficLights3.add(light1);
+        dependentTrafficLights3.add(light2);
+        light3.setDependentTrafficLights(dependentTrafficLights3);
+
+        HashSet<TrafficLight> dependentTrafficLights4 = new HashSet<TrafficLight>();
+        dependentTrafficLights4.add(light2);
+        light4.setDependentTrafficLights(dependentTrafficLights4);
+
         node2.addTrafficLight(light1);
-        node7.addTrafficLight(light2);
-
-        node1.addOutgoingEdge(edge1);
-        node2.addOutgoingEdge(edge2);
-        node3.addOutgoingEdge(edge3);
-        node3.addOutgoingEdge(edge5);
-        node6.addOutgoingEdge(edge4);
-        node6.addOutgoingEdge(edge6);
-        node7.addOutgoingEdge(edge7);
-        node8.addOutgoingEdge(edge8);
-
-        node2.addIncomingEdge(edge1);
-        node2.addIncomingEdge(edge4);
-        node3.addIncomingEdge(edge2);
-        node4.addIncomingEdge(edge3);
-        node5.addIncomingEdge(edge6);
-        node6.addIncomingEdge(edge7);
-        node7.addIncomingEdge(edge5);
-        node7.addIncomingEdge(edge8);
+        node3.addTrafficLight(light2);
+        node6.addTrafficLight(light3);
+        node8.addTrafficLight(light4);
 
         nodes.add(node1);
         nodes.add(node2);
@@ -74,10 +73,11 @@ public class IntersectionLoader {
         nodes.add(node6);
         nodes.add(node7);
         nodes.add(node8);
+        nodes.add(node9);
         inputNodes.add(node1);
-        inputNodes.add(node8);
+        inputNodes.add(node7);
         outputNodes.add(node4);
-        outputNodes.add(node5);
+        outputNodes.add(node9);
 
         Intersection intersection = new Intersection(nodes);
         intersection.setInputNodes(inputNodes);
@@ -85,6 +85,8 @@ public class IntersectionLoader {
 
         intersection.addTraficLight(light1);
         intersection.addTraficLight(light2);
+        intersection.addTraficLight(light3);
+        intersection.addTraficLight(light4);
 
         return intersection;
     }

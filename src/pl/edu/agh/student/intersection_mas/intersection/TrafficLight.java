@@ -6,7 +6,7 @@ import java.util.Set;
  * Created by maciek on 10.05.16.
  */
 public class TrafficLight {
-    private static final int MIN_STEPS_TO_CHANGE_STATE = 10;
+    private static final int MIN_STEPS_TO_CHANGE_STATE = 20;
     private static final int CARS_OVER_TIME_THRESHOLD = 5;
 
     private Edge incomingEdge;

@@ -27,6 +27,9 @@ public class Edge {
         this.end = end;
 
         this.drivers = new HashSet<Driver>();
+
+        start.addOutgoingEdge(this);
+        end.addIncomingEdge(this);
     }
 
     public synchronized void addDriver(Driver driver) {
