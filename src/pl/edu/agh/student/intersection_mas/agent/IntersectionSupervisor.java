@@ -58,7 +58,7 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(30);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
