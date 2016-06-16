@@ -18,16 +18,16 @@ public class IntersectionSupervisor extends UntypedActor {
     private ArrayList<ActorRef> drivers = new ArrayList<ActorRef>();
     private ActorRef trafficLightController;
     private int receivedStates = 0;
-    private int simulationSteps;
+    private int simulationStepsLimit;
     private int currentSimulationStep;
     private Intersection intersection;
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
 
-    public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView, int simulationSteps, int driversNumber) {
+    public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView, int simulationStepsLimit, int driversNumber) {
         this.intersection = intersection;
         this.intersectionView = intersectionView;
-        this.simulationSteps = simulationSteps;
+        this.simulationStepsLimit = simulationStepsLimit;
         this.driversNumber = driversNumber;
 
         this.currentSimulationStep = 0;
@@ -62,7 +62,7 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -71,6 +71,11 @@ public class IntersectionSupervisor extends UntypedActor {
             statisticsCollector.update();
             askDriversForState();
             trafficLightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
+
+            if (currentSimulationStep >= simulationStepsLimit) {
+                getContext().system().shutdown();
+                System.exit(0);
+            }
         }
     }
 
