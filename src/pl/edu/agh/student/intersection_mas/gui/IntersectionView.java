@@ -9,8 +9,8 @@ import javax.swing.*;
  */
 public class IntersectionView extends JFrame {
     private static final String WINDOW_NAME = "ZURMAS";
-    private static final int WINDOW_WIDTH = 800;
-    private static final int WINDOW_HEIGHT = 600;
+    private static final int WINDOW_WIDTH = 1400;
+    private static final int WINDOW_HEIGHT = 800;
 
     private IntersectionPanel intersectionPanel;
 

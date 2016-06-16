@@ -45,7 +45,7 @@ public class TrafficLight {
 
 
     public void changeState(TrafficLightState state) {
-        System.out.println(this.toString() + state);
+//        System.out.println(this.toString() + state);
         if (state != this.state) {
             if (this.state == TrafficLightState.YELLOW && this.stepsSinceStageChange >= MIN_STEPS_TO_CHANGE_YELLOW_STATE) {
                 this.state = this.nextState;

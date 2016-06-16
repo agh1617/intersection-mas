@@ -2,6 +2,7 @@ package pl.edu.agh.student.intersection_mas.agent;
 
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.intersection.*;
+import pl.edu.agh.student.intersection_mas.utils.SimulationLogger;
 
 import java.awt.*;
 import java.util.Random;
@@ -12,28 +13,28 @@ import java.util.Set;
  */
 public class Driver extends UntypedActor {
     private static final int MAX_LENGTH = 10;
+    private static final int STEPS_OFFSET = 3;
 
     private Intersection intersection;
-
+    private SimulationLogger logger;
     private DriverState state;
 
     private DriverPosition position;
 
     private int speed;
-
     private int maxSpeed;
-
     private int acceleration;
-
     private int deceleration;
-
     private int length;
+    private int simulationStep;
 
     private Color color;
 
-    public Driver(Intersection intersection) {
+    public Driver(Intersection intersection, SimulationLogger logger) {
         this.intersection = intersection;
+        this.logger = logger;
 
+        this.simulationStep = 0;
         this.speed = 0;
         this.state = DriverState.IDLE;
 
@@ -69,12 +70,13 @@ public class Driver extends UntypedActor {
             if (this.moveForward()) {
                 this.calculateState();
                 this.updateSpeed();
-
+                this.simulationStep++;
 //                System.out.println(this.toString());
 
                 getSender().tell(DriverMessage.DONE, getSelf());
             }
             else {
+                logger.info(String.valueOf(this.simulationStep));
                 getSender().tell(DriverMessage.FINISHED, getSelf());
             }
         } else
@@ -192,6 +194,14 @@ public class Driver extends UntypedActor {
 
     public Color getColor() {
         return color;
+    }
+
+    public int getSpeed() {
+        return this.speed;
+    }
+
+    public boolean isDriving() {
+        return this.simulationStep > STEPS_OFFSET;
     }
 
     @Override
