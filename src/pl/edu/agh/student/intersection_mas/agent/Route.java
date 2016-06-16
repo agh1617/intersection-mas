@@ -3,48 +3,58 @@ package pl.edu.agh.student.intersection_mas.agent;
 import pl.edu.agh.student.intersection_mas.intersection.Edge;
 import pl.edu.agh.student.intersection_mas.intersection.Node;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+public class Route implements Iterator {
+    private List<Edge> edges;
 
-/**
- * Created by bzurkowski on 19.04.16.
- */
-public class Route {
-    private List<Node> nodes;
+    private Iterator<Edge> edgesIt;
 
-    private Node start;
+    private Node startNode;
 
-    private Node end;
-
-    public Route(Node start, Node end) {
-        this.start = start;
-        this.end = end;
-
-        this.nodes = new LinkedList<Node>();
-
-        this.calculate();
+    public Route(Node startNode) {
+        this.startNode = startNode;
+        this.edges = calculateEdges();
+        this.edgesIt = edges.iterator();
     }
 
-    public void calculate() {
-        Node currentNode = this.start;
-        this.nodes.add(currentNode);
+    private List<Edge> calculateEdges() {
+        List<Edge> route = new LinkedList<Edge>();
 
-        while (currentNode != null && currentNode != this.end) {
-            Iterator<Edge> outgoingEdgeIt = currentNode.getOutgoingEdges().iterator();
+        Set<Edge> outgoingEdges;
 
-            if (outgoingEdgeIt.hasNext()) {
-                currentNode = outgoingEdgeIt.next().getEnd();
-            } else {
-                currentNode = null;
-            }
+        Node currentNode;
 
-            this.nodes.add(currentNode);
+        int randomEdgeIdx;
+
+        Edge nextEdge;
+
+        currentNode = startNode;
+
+        outgoingEdges = currentNode.getOutgoingEdges();
+
+        Random random = new Random();
+
+        while (!outgoingEdges.isEmpty()) {
+            randomEdgeIdx = random.nextInt(outgoingEdges.size());
+            nextEdge = (Edge) outgoingEdges.toArray()[randomEdgeIdx];
+
+            route.add(nextEdge);
+            outgoingEdges = nextEdge.getEnd().getOutgoingEdges();
         }
+
+        return route;
     }
 
-    public List<Node> getNodes() {
-        return nodes;
+    public boolean hasNext() {
+        return edgesIt.hasNext();
+    }
+
+    public Edge next() {
+        return edgesIt.next();
+    }
+
+    public void remove() {
+        edgesIt.remove();
     }
 }

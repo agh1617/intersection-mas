@@ -19,6 +19,8 @@ public class Driver extends UntypedActor {
 
     private DriverPosition position;
 
+    private Route route;
+
     private int speed;
 
     private int maxSpeed;
@@ -49,7 +51,10 @@ public class Driver extends UntypedActor {
 
     @Override
     public void preStart() throws Exception {
-        Edge startEdge = this.calculateStartEdge();
+        this.route = calculateRoute();
+
+        Edge startEdge = route.next();
+
         this.position = new DriverPosition(startEdge, 0);
         startEdge.addDriver(this);
     }
@@ -215,5 +220,10 @@ public class Driver extends UntypedActor {
         float b = rand.nextFloat();
 
         return new Color(r, g, b);
+    }
+
+    private Route calculateRoute() {
+        Node startNode = intersection.getRandomInputNode();
+        return new Route(startNode);
     }
 }
