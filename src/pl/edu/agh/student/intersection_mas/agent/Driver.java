@@ -1,22 +1,25 @@
 package pl.edu.agh.student.intersection_mas.agent;
 
 import akka.actor.UntypedActor;
-import pl.edu.agh.student.intersection_mas.intersection.*;
-import pl.edu.agh.student.intersection_mas.utils.SimulationLogger;
+import pl.edu.agh.student.intersection_mas.intersection.Edge;
+import pl.edu.agh.student.intersection_mas.intersection.Intersection;
+import pl.edu.agh.student.intersection_mas.intersection.Node;
+import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
 
 import java.awt.*;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by maciek on 19.04.16.
  */
 public class Driver extends UntypedActor {
     private static final int MAX_LENGTH = 10;
-    private static final int STEPS_OFFSET = 3;
+    private static final int MIN_DISTANCE = 10;
 
     private Intersection intersection;
-    private SimulationLogger logger;
+    private Logger logger;
     private DriverState state;
 
     private DriverPosition position;
@@ -27,15 +30,17 @@ public class Driver extends UntypedActor {
     private int deceleration;
     private int length;
     private int simulationStep;
+    private int distanceCovered;
 
     private Color color;
 
-    public Driver(Intersection intersection, SimulationLogger logger) {
+    public Driver(Intersection intersection) {
         this.intersection = intersection;
-        this.logger = logger;
+        this.logger = Logger.getLogger("drivers");
 
         this.simulationStep = 0;
         this.speed = 0;
+        this.distanceCovered = 0;
         this.state = DriverState.IDLE;
 
         this.maxSpeed = 15 + new Random().nextInt(10);
@@ -68,9 +73,10 @@ public class Driver extends UntypedActor {
     public void onReceive(Object message) {
         if (message == DriverMessage.COMPUTE_STATE) {
             if (this.moveForward()) {
+                this.simulationStep++;
+                this.distanceCovered += this.speed;
                 this.calculateState();
                 this.updateSpeed();
-                this.simulationStep++;
 //                System.out.println(this.toString());
 
                 getSender().tell(DriverMessage.DONE, getSelf());
@@ -201,7 +207,7 @@ public class Driver extends UntypedActor {
     }
 
     public boolean isDriving() {
-        return this.simulationStep > STEPS_OFFSET;
+        return this.distanceCovered > MIN_DISTANCE;
     }
 
     @Override

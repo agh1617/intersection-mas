@@ -6,6 +6,7 @@ import pl.edu.agh.student.intersection_mas.agent.IntersectionSupervisor;
 import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.utils.IntersectionLoader;
+import pl.edu.agh.student.intersection_mas.utils.LoggerFactory;
 
 import java.awt.*;
 
@@ -31,6 +32,10 @@ public class IntersectionSimulator {
 
     public static void main(String[] args) {
         IntersectionSimulator intersectionSimulator = new IntersectionSimulator();
+        LoggerFactory loggerFactory = LoggerFactory.getInstance();
+
+        loggerFactory.createLogger("drivers");
+        loggerFactory.createLogger("statistics");
         intersectionSimulator.run();
     }
 }

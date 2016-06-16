@@ -6,6 +6,7 @@ import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.intersection.Node;
 
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 /**
  * Created by maciek on 16.06.16.
@@ -15,14 +16,14 @@ public class StatisticsCollector {
     private HashSet<Node> nodes;
     private int simulationStep;
     private float globalSpeedAverage;
-    private SimulationLogger logger;
+    private Logger logger;
     private String filename;
 
     public StatisticsCollector(Intersection intersection) {
         this.intersection = intersection;
         this.nodes = new HashSet<Node>(intersection.getNodes());
 
-        this.logger = new SimulationLogger("statistics");
+        this.logger = Logger.getLogger("statistics");
         logger.info("simulation_step,global_speed_avg,step_speed_avg");
 
         this.simulationStep = 0;
@@ -37,7 +38,7 @@ public class StatisticsCollector {
         this.globalSpeedAverage = (this.globalSpeedAverage * (this.simulationStep - 1) + stepSpeedAverage) / this.simulationStep;
 
         logger.info(String.format("%d,%f,%f", simulationStep, this.globalSpeedAverage, stepSpeedAverage));
-        System.out.println("Avg speed in current step:\t" + globalSpeedAverage);
+        System.out.println("Avg speed in current step:\t" + stepSpeedAverage);
         System.out.println("Avg speed so far:\t" + this.globalSpeedAverage);
     }
 

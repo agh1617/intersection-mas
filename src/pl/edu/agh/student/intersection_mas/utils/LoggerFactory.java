@@ -11,13 +11,19 @@ import java.util.logging.Logger;
 /**
  * Created by maciek on 16.06.16.
  */
-public class SimulationLogger {
-    private Logger logger;
+public class LoggerFactory {
+    private static LoggerFactory loggerFactory = new LoggerFactory();
 
-    public SimulationLogger(String name) {
+    private LoggerFactory() {}
+
+    public static LoggerFactory getInstance() {
+        return loggerFactory;
+    }
+
+    public void createLogger(String name) {
         FileHandler fh;
-        String filename = name + "_" + new SimpleDateFormat("yyyyMMddhhmm'.log'").format(new Date());
-        logger = Logger.getLogger(name);
+        String filename = "logs/" + name + "_" + new SimpleDateFormat("yyyyMMddhhmm'.log'").format(new Date());
+        Logger logger = Logger.getLogger(name);
 
         try {
             fh = new FileHandler(filename);
@@ -29,10 +35,6 @@ public class SimulationLogger {
             e.printStackTrace();
         }
         logger.setUseParentHandlers(false);
-    }
-
-    public void info(String message) {
-        this.logger.info(message);
     }
 }
 

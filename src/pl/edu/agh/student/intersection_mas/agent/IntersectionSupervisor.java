@@ -5,7 +5,6 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
-import pl.edu.agh.student.intersection_mas.utils.SimulationLogger;
 import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ public class IntersectionSupervisor extends UntypedActor {
     private Intersection intersection;
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
-    private SimulationLogger driversLogger;
 
     public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView, int simulationSteps, int driversNumber) {
         this.intersection = intersection;
@@ -34,7 +32,6 @@ public class IntersectionSupervisor extends UntypedActor {
 
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
-        this.driversLogger = new SimulationLogger("drivers");
     }
 
     @Override
@@ -50,7 +47,7 @@ public class IntersectionSupervisor extends UntypedActor {
         }
         else if (message == DriverMessage.FINISHED) {
             drivers.remove(getSender());
-            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection, this.driversLogger), "driver_" + UUID.randomUUID().toString());
+            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
             drivers.add(driver);
             handleMovement();
         } else
@@ -86,7 +83,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private void spawnDrivers() {
         ActorRef driver;
         for (int i = 0; i < driversNumber; i++) {
-            driver = getContext().actorOf(Props.create(Driver.class, this.intersection, this.driversLogger), "driver_" + UUID.randomUUID().toString());
+            driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
             drivers.add(driver);
             driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
         }
