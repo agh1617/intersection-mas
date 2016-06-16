@@ -33,7 +33,7 @@ public class TrafficLightController extends UntypedActor {
 
     @Override
     public void onReceive(Object message) throws Exception {
-        if (message == TrafficLightMessage.COMPUTE_STATE) {
+        if (message == IntersectionSupervisorMessage.COMPUTE_STATE) {
             calculateState();
         } else
             unhandled(message);

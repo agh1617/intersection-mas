@@ -1,8 +1,8 @@
 package pl.edu.agh.student.intersection_mas.agent;
 
 /**
- * Created by maciek on 11.05.16.
+ * Created by maciek on 16.06.16.
  */
-public enum TrafficLightMessage {
+public enum IntersectionSupervisorMessage {
     COMPUTE_STATE
 }

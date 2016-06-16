@@ -65,19 +65,21 @@ public class Driver extends UntypedActor {
 
     @Override
     public void onReceive(Object message) {
-        if (message == DriverMessage.COMPUTE_STATE) {
+        if (message == IntersectionSupervisorMessage.COMPUTE_STATE) {
+            DriverMessage response;
+
             if (this.moveForward()) {
                 this.calculateState();
                 this.updateSpeed();
 
-//                System.out.println(this.toString());
+                response = new DriverMessage(DriverMessageType.DONE, this.speed);
+            }
+            else
+                response = new DriverMessage(DriverMessageType.FINISHED, this.speed);
 
-                getSender().tell(DriverMessage.DONE, getSelf());
-            }
-            else {
-                getSender().tell(DriverMessage.FINISHED, getSelf());
-            }
-        } else
+            getSender().tell(response, getSelf());
+        }
+        else
             unhandled(message);
     }
 

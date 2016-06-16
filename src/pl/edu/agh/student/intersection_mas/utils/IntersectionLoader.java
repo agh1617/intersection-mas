@@ -52,6 +52,10 @@ public class IntersectionLoader {
         forbiddenEdges2.add(edge7);
         node7.addForbiddenEdges(edge9, forbiddenEdges2);
 
+        HashSet<Edge> forbiddenEdges3 = new HashSet<Edge>();
+        forbiddenEdges3.add(edge3);
+        node7.addForbiddenEdges(edge6, forbiddenEdges3);
+
         TrafficLight light1 = new TrafficLight(1, edge2);
         TrafficLight light2 = new TrafficLight(2, edge4);
         TrafficLight light3 = new TrafficLight(3, edge6);

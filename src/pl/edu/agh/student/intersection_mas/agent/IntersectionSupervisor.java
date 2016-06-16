@@ -19,6 +19,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private int receivedStates = 0;
     private int simulationSteps;
     private int currentSimulationStep;
+    private int driversSpeed;
     private Intersection intersection;
     private IntersectionView intersectionView;
 
@@ -28,6 +29,7 @@ public class IntersectionSupervisor extends UntypedActor {
         this.simulationSteps = simulationSteps;
         this.driversNumber = driversNumber;
         this.currentSimulationStep = 0;
+        this.driversSpeed = 0;
     }
 
     @Override
@@ -38,23 +40,36 @@ public class IntersectionSupervisor extends UntypedActor {
 
     @Override
     public void onReceive(Object message) throws Exception {
-        if (message == DriverMessage.DONE) {
-            handleMovement();
-        }
-        else if (message == DriverMessage.FINISHED) {
-            drivers.remove(getSender());
-            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
-            drivers.add(driver);
-            handleMovement();
-        } else
+        if (message instanceof DriverMessage)
+            handleDriverMessage((DriverMessage) message);
+        else
             unhandled(message);
     }
 
-    private void handleMovement() {
+    private void handleDriverMessage(DriverMessage message) {
+        DriverMessageType driverMessageType = message.getType();
+
+        if (driverMessageType == DriverMessageType.DONE) {
+            handleMovement(message.getSpeed());
+        }
+        else if (driverMessageType == DriverMessageType.FINISHED) {
+            drivers.remove(getSender());
+            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
+            drivers.add(driver);
+            handleMovement(message.getSpeed());
+        }
+        else
+            unhandled(message);
+    }
+
+    private void handleMovement(int speed) {
         receivedStates++;
+        driversSpeed += speed;
 
         if (receivedStates >= driversNumber) {
             currentSimulationStep++;
+            System.out.println("Average drivers speed:\t" + (float) driversSpeed / driversNumber);
+            driversSpeed = 0;
             receivedStates = 0;
 
             try {
@@ -65,13 +80,13 @@ public class IntersectionSupervisor extends UntypedActor {
 
             intersectionView.updateView();
             askDriversForState();
-            trafficLightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
+            trafficLightController.tell(IntersectionSupervisorMessage.COMPUTE_STATE, getSelf());
         }
     }
 
     private void askDriversForState() {
         for (ActorRef driver : drivers) {
-            driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
+            driver.tell(IntersectionSupervisorMessage.COMPUTE_STATE, getSelf());
         }
     }
 
@@ -80,7 +95,7 @@ public class IntersectionSupervisor extends UntypedActor {
         for (int i = 0; i < driversNumber; i++) {
             driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
             drivers.add(driver);
-            driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
+            driver.tell(IntersectionSupervisorMessage.COMPUTE_STATE, getSelf());
         }
     }
 }
