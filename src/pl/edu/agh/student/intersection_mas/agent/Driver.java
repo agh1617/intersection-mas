@@ -19,6 +19,7 @@ public class Driver extends UntypedActor {
     private static final int MIN_DISTANCE = 10;
 
     private Intersection intersection;
+    private Edge startEdge;
     private Logger logger;
     private DriverState state;
 
@@ -34,8 +35,10 @@ public class Driver extends UntypedActor {
 
     private Color color;
 
-    public Driver(Intersection intersection) {
+    public Driver(Intersection intersection, Edge startEdge) {
         this.intersection = intersection;
+        this.startEdge = startEdge;
+
         this.logger = Logger.getLogger("drivers");
 
         this.simulationStep = 0;
@@ -55,18 +58,8 @@ public class Driver extends UntypedActor {
 
     @Override
     public void preStart() throws Exception {
-        Edge startEdge = this.calculateStartEdge();
         this.position = new DriverPosition(startEdge, 0);
         startEdge.addDriver(this);
-    }
-
-    private Edge calculateStartEdge() {
-        Set<Node> startNodes = intersection.getInputNodes();
-        Node startNode = (Node) startNodes.toArray()[new Random().nextInt(startNodes.size())];
-
-        Set<Edge> outgoingEdges = startNode.getOutgoingEdges();
-
-        return (Edge) outgoingEdges.toArray()[new Random().nextInt(outgoingEdges.size())];
     }
 
     @Override

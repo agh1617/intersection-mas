@@ -17,7 +17,8 @@ import java.util.logging.Logger;
  * Created by maciek on 19.04.16.
  */
 public class IntersectionSupervisor extends UntypedActor {
-    private int driversNumber;
+    private int maxDriversCount;
+    private int currentDriversCount;
     private ArrayList<ActorRef> drivers = new ArrayList<ActorRef>();
     private ActorRef trafficLightController;
     private int receivedStates = 0;
@@ -28,6 +29,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
     private CollisionDetector collisionDetector;
+    private SpawnManager spawnManager;
 
     public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView) {
         this.intersection = intersection;
@@ -35,18 +37,20 @@ public class IntersectionSupervisor extends UntypedActor {
 
         SimulationProperties properties = SimulationProperties.getInstance();
         this.simulationStepsLimit = Integer.parseInt(properties.get("simulationStepsLimit"));
-        this.driversNumber = Integer.parseInt(properties.get("driversNumber"));
+        this.maxDriversCount = Integer.parseInt(properties.get("driversNumber"));
         this.stepDuration = Integer.parseInt(properties.get("stepDuration"));
-
+        this.currentDriversCount = 0;
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
         this.collisionDetector = new CollisionDetector(intersection);
+        this.spawnManager = new SpawnManager(intersection, getContext());
     }
 
     @Override
     public void preStart() {
         trafficLightController = getContext().actorOf(Props.create(TrafficLightController.class, intersection.getTrafficLights()), "traffic_light_controller");
         spawnDrivers();
+        askDriversForState();
     }
 
     @Override
@@ -56,8 +60,7 @@ public class IntersectionSupervisor extends UntypedActor {
         }
         else if (message == DriverMessage.FINISHED) {
             drivers.remove(getSender());
-            ActorRef driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
-            drivers.add(driver);
+            currentDriversCount--;
             handleMovement();
         } else
             unhandled(message);
@@ -66,7 +69,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private void handleMovement() {
         receivedStates++;
 
-        if (receivedStates >= driversNumber) {
+        if (receivedStates >= currentDriversCount) {
             currentSimulationStep++;
             receivedStates = 0;
 
@@ -79,6 +82,7 @@ public class IntersectionSupervisor extends UntypedActor {
             intersectionView.updateView();
             statisticsCollector.update();
             detectCollisions();
+            spawnDrivers();
             askDriversForState();
             trafficLightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
 
@@ -105,11 +109,11 @@ public class IntersectionSupervisor extends UntypedActor {
     }
 
     private void spawnDrivers() {
-        ActorRef driver;
-        for (int i = 0; i < driversNumber; i++) {
-            driver = getContext().actorOf(Props.create(Driver.class, this.intersection), "driver_" + UUID.randomUUID().toString());
-            drivers.add(driver);
-            driver.tell(DriverMessage.COMPUTE_STATE, getSelf());
-        }
+        int numDriversToSpawn = maxDriversCount - currentDriversCount;
+
+        ArrayList<ActorRef> spawnedAgents = spawnManager.spawn(numDriversToSpawn);
+        drivers.addAll(spawnedAgents);
+
+        currentDriversCount = drivers.size();
     }
 }
