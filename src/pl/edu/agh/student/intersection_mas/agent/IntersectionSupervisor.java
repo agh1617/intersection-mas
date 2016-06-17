@@ -10,6 +10,7 @@ import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
 
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 /**
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class IntersectionSupervisor extends UntypedActor {
     private int maxDriversCount;
-    private int currentDriversCount;
+    private AtomicInteger currentDriversCount;
     private ArrayList<ActorRef> drivers = new ArrayList<ActorRef>();
     private ActorRef trafficLightController;
     private int receivedStates = 0;
@@ -41,7 +42,7 @@ public class IntersectionSupervisor extends UntypedActor {
         this.maxDriversCount = Integer.parseInt(properties.get("driversNumber"));
         this.stepDuration = Integer.parseInt(properties.get("stepDuration"));
         this.simulationNumber = Integer.parseInt(properties.get("simulationNumber"));
-        this.currentDriversCount = 0;
+        this.currentDriversCount = new AtomicInteger(0);
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
         this.collisionDetector = new CollisionDetector(intersection);
@@ -64,7 +65,9 @@ public class IntersectionSupervisor extends UntypedActor {
         }
         else if (message == DriverMessage.FINISHED) {
             drivers.remove(getSender());
-            currentDriversCount--;
+
+            currentDriversCount.decrementAndGet();
+
             handleMovement();
         } else
             unhandled(message);
@@ -73,7 +76,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private void handleMovement() {
         receivedStates++;
 
-        if (receivedStates >= currentDriversCount) {
+        if (receivedStates >= currentDriversCount.get()) {
             currentSimulationStep++;
             receivedStates = 0;
 
@@ -111,11 +114,11 @@ public class IntersectionSupervisor extends UntypedActor {
     }
 
     private void spawnDrivers() {
-        int numDriversToSpawn = maxDriversCount - currentDriversCount;
+        int numDriversToSpawn = maxDriversCount - currentDriversCount.get();
 
         ArrayList<ActorRef> spawnedAgents = spawnManager.spawn(numDriversToSpawn);
         drivers.addAll(spawnedAgents);
 
-        currentDriversCount = drivers.size();
+        currentDriversCount.set(drivers.size());
     }
 }
