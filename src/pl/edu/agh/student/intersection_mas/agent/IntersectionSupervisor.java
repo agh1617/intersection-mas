@@ -10,7 +10,6 @@ import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
 
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -25,6 +24,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private int simulationStepsLimit;
     private int currentSimulationStep;
     private int stepDuration;
+    private int simulationNumber;
     private Intersection intersection;
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
@@ -40,6 +40,7 @@ public class IntersectionSupervisor extends UntypedActor {
         this.simulationStepsLimit = Integer.parseInt(properties.get("simulationStepsLimit"));
         this.maxDriversCount = Integer.parseInt(properties.get("driversNumber"));
         this.stepDuration = Integer.parseInt(properties.get("stepDuration"));
+        this.simulationNumber = Integer.parseInt(properties.get("simulationNumber"));
         this.currentDriversCount = 0;
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
@@ -100,7 +101,7 @@ public class IntersectionSupervisor extends UntypedActor {
         Set<Set<Driver>> collisions = collisionDetector.detectCollisions();
         int numCollisions = collisions.size();
 
-        collisionsLogger.info(String.format("%d,%d", currentSimulationStep, numCollisions));
+        collisionsLogger.info(String.format("%d,%d,%d", simulationNumber, currentSimulationStep, numCollisions));
     }
 
     private void askDriversForState() {
