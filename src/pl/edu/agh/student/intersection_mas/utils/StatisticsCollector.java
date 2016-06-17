@@ -16,19 +16,26 @@ public class StatisticsCollector {
     private Intersection intersection;
     private HashSet<Node> nodes;
     private int simulationStep;
+    private int simulationNumber;
+    private int driversNumber;
     private float globalSpeedAverage;
     private Logger logger;
-    private String filename;
+    private Logger globalLogger;
 
     public StatisticsCollector(Intersection intersection) {
         this.intersection = intersection;
         this.nodes = new HashSet<Node>(intersection.getNodes());
 
         this.logger = Logger.getLogger("statistics");
-        logger.info("simulation_number,simulation_step,global_speed_avg,step_speed_avg");
+        logger.info("simulation_number,drivers_number,simulation_step,global_speed_avg,step_speed_avg");
+        this.globalLogger = Logger.getLogger("global_statistics");
 
         this.simulationStep = 0;
         this.globalSpeedAverage = 0;
+
+        SimulationProperties simulationProperties = SimulationProperties.getInstance();
+        simulationNumber = Integer.parseInt(simulationProperties.get("simulationNumber"));
+        driversNumber = Integer.parseInt(simulationProperties.get("driversNumber"));
     }
 
     public void update() {
@@ -38,7 +45,8 @@ public class StatisticsCollector {
 
         this.globalSpeedAverage = (this.globalSpeedAverage * (this.simulationStep - 1) + stepSpeedAverage) / this.simulationStep;
 
-        logger.info(String.format(Locale.US, "1,%d,%f,%f", simulationStep, this.globalSpeedAverage, stepSpeedAverage));
+        logger.info(String.format(Locale.US, "0,%d,%d,%f,%f", driversNumber, simulationStep, this.globalSpeedAverage, stepSpeedAverage));
+        globalLogger.info(String.format(Locale.US, "%d,%d,%d,%f,%f", simulationNumber, driversNumber, simulationStep, this.globalSpeedAverage, stepSpeedAverage));
         System.out.println("Avg speed in current step:\t" + stepSpeedAverage);
         System.out.println("Avg speed so far:\t" + this.globalSpeedAverage);
     }

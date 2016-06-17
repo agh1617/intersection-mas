@@ -25,7 +25,7 @@ public class SimulationProperties {
     private void readProperties() {
         InputStream inputStream = null;
         try {
-            String filename = "logs/config_" + new SimpleDateFormat("yyyyMMddhhmm'.log'").format(new Date());
+            String filename = "logs/config_" + new SimpleDateFormat("yyyyMMddhhmmss'.log'").format(new Date());
             Files.copy(Paths.get(FILE_NAME), Paths.get(filename), StandardCopyOption.REPLACE_EXISTING);
 
             this.properties = new Properties();

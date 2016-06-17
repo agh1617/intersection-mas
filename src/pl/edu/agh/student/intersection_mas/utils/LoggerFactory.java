@@ -21,12 +21,16 @@ public class LoggerFactory {
     }
 
     public void createLogger(String name) {
+        String filename = "logs/" + name + "_" + new SimpleDateFormat("yyyyMMddhhmmss'.log'").format(new Date());
+        createLogger(name, filename);
+    }
+
+    public void createLogger(String name, String filename) {
         FileHandler fh;
-        String filename = "logs/" + name + "_" + new SimpleDateFormat("yyyyMMddhhmm'.log'").format(new Date());
         Logger logger = Logger.getLogger(name);
 
         try {
-            fh = new FileHandler(filename);
+            fh = new FileHandler(filename, true);
             logger.addHandler(fh);
             fh.setFormatter(new SimulationLogFormatter());
         } catch (SecurityException e) {
