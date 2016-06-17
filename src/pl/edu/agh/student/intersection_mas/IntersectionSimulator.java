@@ -37,6 +37,7 @@ public class IntersectionSimulator {
         loggerFactory.createLogger("drivers");
         loggerFactory.createLogger("statistics");
         loggerFactory.createLogger("global_statistics", "logs/global_statistics.log");
+        loggerFactory.createLogger("collisions");
         intersectionSimulator.run();
     }
 }

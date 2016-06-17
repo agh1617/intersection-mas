@@ -9,7 +9,9 @@ import pl.edu.agh.student.intersection_mas.utils.SimulationProperties;
 import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Created by maciek on 19.04.16.
@@ -25,6 +27,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private Intersection intersection;
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
+    private CollisionDetector collisionDetector;
 
     public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView) {
         this.intersection = intersection;
@@ -37,6 +40,7 @@ public class IntersectionSupervisor extends UntypedActor {
 
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
+        this.collisionDetector = new CollisionDetector(intersection);
     }
 
     @Override
@@ -74,6 +78,7 @@ public class IntersectionSupervisor extends UntypedActor {
 
             intersectionView.updateView();
             statisticsCollector.update();
+            detectCollisions();
             askDriversForState();
             trafficLightController.tell(TrafficLightMessage.COMPUTE_STATE, getSelf());
 
@@ -82,6 +87,15 @@ public class IntersectionSupervisor extends UntypedActor {
                 System.exit(0);
             }
         }
+    }
+
+    private void detectCollisions() {
+        Logger logger = Logger.getLogger("collisions");
+
+        Set<Set<Driver>> collisions = collisionDetector.detectCollisions();
+        int numCollisions = collisions.size();
+
+        logger.info(String.format("%d,%d", currentSimulationStep, numCollisions));
     }
 
     private void askDriversForState() {

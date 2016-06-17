@@ -77,7 +77,6 @@ public class Driver extends UntypedActor {
                 this.distanceCovered += this.speed;
                 this.calculateState();
                 this.updateSpeed();
-//                System.out.println(this.toString());
 
                 getSender().tell(DriverMessage.DONE, getSelf());
             }
@@ -87,6 +86,18 @@ public class Driver extends UntypedActor {
             }
         } else
             unhandled(message);
+    }
+
+    public boolean collidesWith(Driver otherDriver) {
+        DriverPosition otherPosition = otherDriver.getPosition();
+
+        if (otherPosition.getEdge() != position.getEdge())
+            return false;
+
+        int distance = Math.abs(position.getPosition() - otherPosition.getPosition());
+        int sumRadius = (int) (length / 2f + otherDriver.getLength() / 2f);
+
+        return distance < sumRadius;
     }
 
     private void updateSpeed() {
