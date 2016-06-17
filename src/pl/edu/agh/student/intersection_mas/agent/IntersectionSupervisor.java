@@ -30,6 +30,7 @@ public class IntersectionSupervisor extends UntypedActor {
     private StatisticsCollector statisticsCollector;
     private CollisionDetector collisionDetector;
     private SpawnManager spawnManager;
+    private Logger collisionsLogger;
 
     public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView) {
         this.intersection = intersection;
@@ -44,6 +45,8 @@ public class IntersectionSupervisor extends UntypedActor {
         this.statisticsCollector = new StatisticsCollector(intersection);
         this.collisionDetector = new CollisionDetector(intersection);
         this.spawnManager = new SpawnManager(intersection, getContext());
+
+        this.collisionsLogger = Logger.getLogger("collisions");
     }
 
     @Override
@@ -94,12 +97,10 @@ public class IntersectionSupervisor extends UntypedActor {
     }
 
     private void detectCollisions() {
-        Logger logger = Logger.getLogger("collisions");
-
         Set<Set<Driver>> collisions = collisionDetector.detectCollisions();
         int numCollisions = collisions.size();
 
-        logger.info(String.format("%d,%d", currentSimulationStep, numCollisions));
+        collisionsLogger.info(String.format("%d,%d", currentSimulationStep, numCollisions));
     }
 
     private void askDriversForState() {
