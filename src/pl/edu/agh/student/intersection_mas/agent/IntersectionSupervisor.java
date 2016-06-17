@@ -5,6 +5,7 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
+import pl.edu.agh.student.intersection_mas.utils.SimulationProperties;
 import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
 
 import java.util.ArrayList;
@@ -20,15 +21,19 @@ public class IntersectionSupervisor extends UntypedActor {
     private int receivedStates = 0;
     private int simulationStepsLimit;
     private int currentSimulationStep;
+    private int stepDuration;
     private Intersection intersection;
     private IntersectionView intersectionView;
     private StatisticsCollector statisticsCollector;
 
-    public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView, int simulationStepsLimit, int driversNumber) {
+    public IntersectionSupervisor(Intersection intersection, IntersectionView intersectionView) {
         this.intersection = intersection;
         this.intersectionView = intersectionView;
-        this.simulationStepsLimit = simulationStepsLimit;
-        this.driversNumber = driversNumber;
+
+        SimulationProperties properties = SimulationProperties.getInstance();
+        this.simulationStepsLimit = Integer.parseInt(properties.get("simulationStepsLimit"));
+        this.driversNumber = Integer.parseInt(properties.get("driversNumber"));
+        this.stepDuration = Integer.parseInt(properties.get("stepDuration"));
 
         this.currentSimulationStep = 0;
         this.statisticsCollector = new StatisticsCollector(intersection);
@@ -62,7 +67,7 @@ public class IntersectionSupervisor extends UntypedActor {
             receivedStates = 0;
 
             try {
-                Thread.sleep(50);
+                Thread.sleep(stepDuration);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

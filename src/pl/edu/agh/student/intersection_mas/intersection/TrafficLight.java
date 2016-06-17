@@ -1,15 +1,18 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
+import pl.edu.agh.student.intersection_mas.utils.SimulationProperties;
+
 import java.util.Set;
 
 /**
  * Created by maciek on 10.05.16.
  */
 public class TrafficLight {
-    private static final int MIN_STEPS_TO_CHANGE_GREEN_STATE = 20;
-    private static final int MIN_STEPS_TO_CHANGE_YELLOW_STATE = 5;
-    private static final int MIN_STEPS_TO_CHANGE_RED_STATE = 10;
-    private static final int GREEN_DELAY_STEPS = 5;
+    private int minStepsToChangeGreenState;
+    private int minStepsToChangeYellowState;
+    private int minStepsToChangeRedState;
+    private int greenDelaySteps;
+    private int waitingDriversWeight;
 
     private int id;
     private Edge incomingEdge;
@@ -25,6 +28,8 @@ public class TrafficLight {
         this.state = TrafficLightState.RED;
         this.stepsSinceStageChange = 100;
         this.greenDelayCounter = 0;
+
+        readConfig();
     }
 
     public Edge getIncomingEdge() {
@@ -47,13 +52,13 @@ public class TrafficLight {
     public void changeState(TrafficLightState state) {
 //        System.out.println(this.toString() + state);
         if (state != this.state) {
-            if (this.state == TrafficLightState.YELLOW && this.stepsSinceStageChange >= MIN_STEPS_TO_CHANGE_YELLOW_STATE) {
+            if (this.state == TrafficLightState.YELLOW && this.stepsSinceStageChange >= minStepsToChangeYellowState) {
                 this.state = this.nextState;
                 this.stepsSinceStageChange = 0;
             }
             else if (allowsChange()) {
                 this.greenDelayCounter++;
-                if (this.state == TrafficLightState.GREEN || this.greenDelayCounter > GREEN_DELAY_STEPS) {
+                if (this.state == TrafficLightState.GREEN || this.greenDelayCounter > greenDelaySteps) {
                     this.state = TrafficLightState.YELLOW;
                     this.nextState = state;
                     this.stepsSinceStageChange = 0;
@@ -64,8 +69,8 @@ public class TrafficLight {
     }
 
     public boolean allowsChange() {
-        if (this.state == TrafficLightState.GREEN) return stepsSinceStageChange > MIN_STEPS_TO_CHANGE_GREEN_STATE;
-        else if (this.state == TrafficLightState.RED) return stepsSinceStageChange > MIN_STEPS_TO_CHANGE_RED_STATE;
+        if (this.state == TrafficLightState.GREEN) return stepsSinceStageChange > minStepsToChangeGreenState;
+        else if (this.state == TrafficLightState.RED) return stepsSinceStageChange > minStepsToChangeRedState;
         return false;
     }
 
@@ -76,11 +81,20 @@ public class TrafficLight {
     public int calculateCarsOverTimeFactor() {
         this.stepsSinceStageChange++;
 
-        return stepsSinceStageChange + 10 * calculateApproachingDriversCount();
+        return stepsSinceStageChange + waitingDriversWeight * calculateApproachingDriversCount();
     }
 
     private int calculateApproachingDriversCount() {
         return  incomingEdge.getDrivers().size();
+    }
+
+    private void readConfig() {
+        SimulationProperties properties = SimulationProperties.getInstance();
+        minStepsToChangeGreenState = Integer.parseInt(properties.get("minStepsToChangeGreenState"));
+        minStepsToChangeYellowState = Integer.parseInt(properties.get("minStepsToChangeYellowState"));
+        minStepsToChangeRedState = Integer.parseInt(properties.get("minStepsToChangeRedState"));
+        greenDelaySteps = Integer.parseInt(properties.get("greenDelaySteps"));
+        waitingDriversWeight = Integer.parseInt(properties.get("waitingDriversWeight"));
     }
 
     @Override
