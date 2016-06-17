@@ -3,7 +3,7 @@ package pl.edu.agh.student.intersection_mas.utils;
 import pl.edu.agh.student.intersection_mas.intersection.Edge;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.intersection.Node;
-import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
+import pl.edu.agh.student.intersection_mas.agent.TrafficLight;
 
 import java.util.HashSet;
 

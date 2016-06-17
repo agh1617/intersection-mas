@@ -1,5 +1,7 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
+import pl.edu.agh.student.intersection_mas.agent.TrafficLight;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

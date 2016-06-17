@@ -1,4 +1,4 @@
-package pl.edu.agh.student.intersection_mas.utils;
+package pl.edu.agh.student.intersection_mas.simulation;
 
 import java.io.FileInputStream;
 import java.io.IOException;

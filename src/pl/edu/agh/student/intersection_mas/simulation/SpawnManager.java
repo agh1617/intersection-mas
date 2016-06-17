@@ -1,8 +1,9 @@
-package pl.edu.agh.student.intersection_mas.agent;
+package pl.edu.agh.student.intersection_mas.simulation;
 
 import akka.actor.ActorContext;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import pl.edu.agh.student.intersection_mas.agent.Driver;
 import pl.edu.agh.student.intersection_mas.intersection.Edge;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.intersection.Node;

@@ -4,7 +4,6 @@ import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.intersection.Edge;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
 import pl.edu.agh.student.intersection_mas.intersection.Node;
-import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
 
 import java.awt.*;
 import java.util.Random;

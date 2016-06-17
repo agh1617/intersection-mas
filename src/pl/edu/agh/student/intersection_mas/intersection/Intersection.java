@@ -1,6 +1,8 @@
 package pl.edu.agh.student.intersection_mas.intersection;
 
 
+import pl.edu.agh.student.intersection_mas.agent.TrafficLight;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;

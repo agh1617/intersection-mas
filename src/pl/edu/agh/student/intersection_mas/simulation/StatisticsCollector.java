@@ -1,4 +1,4 @@
-package pl.edu.agh.student.intersection_mas.utils;
+package pl.edu.agh.student.intersection_mas.simulation;
 
 import pl.edu.agh.student.intersection_mas.agent.Driver;
 import pl.edu.agh.student.intersection_mas.intersection.Edge;

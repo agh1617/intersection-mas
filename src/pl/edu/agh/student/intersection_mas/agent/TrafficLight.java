@@ -1,6 +1,7 @@
-package pl.edu.agh.student.intersection_mas.intersection;
+package pl.edu.agh.student.intersection_mas.agent;
 
-import pl.edu.agh.student.intersection_mas.utils.SimulationProperties;
+import pl.edu.agh.student.intersection_mas.intersection.Edge;
+import pl.edu.agh.student.intersection_mas.simulation.SimulationProperties;
 
 import java.util.Set;
 

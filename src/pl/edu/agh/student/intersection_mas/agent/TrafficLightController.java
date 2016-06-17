@@ -1,8 +1,6 @@
 package pl.edu.agh.student.intersection_mas.agent;
 
 import akka.actor.UntypedActor;
-import pl.edu.agh.student.intersection_mas.intersection.TrafficLight;
-import pl.edu.agh.student.intersection_mas.intersection.TrafficLightState;
 
 import java.util.ArrayList;
 import java.util.Arrays;

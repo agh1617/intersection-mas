@@ -1,6 +1,8 @@
 package pl.edu.agh.student.intersection_mas.gui;
 
 import pl.edu.agh.student.intersection_mas.agent.Driver;
+import pl.edu.agh.student.intersection_mas.agent.TrafficLight;
+import pl.edu.agh.student.intersection_mas.agent.TrafficLightState;
 import pl.edu.agh.student.intersection_mas.intersection.*;
 
 import javax.swing.*;

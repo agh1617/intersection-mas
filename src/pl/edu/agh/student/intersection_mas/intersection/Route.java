@@ -1,4 +1,4 @@
-package pl.edu.agh.student.intersection_mas.agent;
+package pl.edu.agh.student.intersection_mas.intersection;
 
 import pl.edu.agh.student.intersection_mas.intersection.Edge;
 import pl.edu.agh.student.intersection_mas.intersection.Node;

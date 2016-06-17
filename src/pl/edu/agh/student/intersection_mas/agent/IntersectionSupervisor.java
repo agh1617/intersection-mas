@@ -5,8 +5,10 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import pl.edu.agh.student.intersection_mas.gui.IntersectionView;
 import pl.edu.agh.student.intersection_mas.intersection.Intersection;
-import pl.edu.agh.student.intersection_mas.utils.SimulationProperties;
-import pl.edu.agh.student.intersection_mas.utils.StatisticsCollector;
+import pl.edu.agh.student.intersection_mas.simulation.CollisionDetector;
+import pl.edu.agh.student.intersection_mas.simulation.SpawnManager;
+import pl.edu.agh.student.intersection_mas.simulation.SimulationProperties;
+import pl.edu.agh.student.intersection_mas.simulation.StatisticsCollector;
 
 import java.util.ArrayList;
 import java.util.Set;
